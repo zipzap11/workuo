@@ -8,7 +8,7 @@ import (
 )
 
 type jobPresenter struct {
-	jobPresentation presentation.JobHandler
+	JobPresentation presentation.JobHandler
 }
 
 func Init() jobPresenter {
@@ -16,5 +16,5 @@ func Init() jobPresenter {
 	jobData := data.NewMysqlJobRepository(DB)
 	jobService := service.NewJobUseCase(jobData)
 
-	return jobPresenter{jobPresentation: *presentation.NewJobHandler(jobService)}
+	return jobPresenter{JobPresentation: *presentation.NewJobHandler(jobService)}
 }
