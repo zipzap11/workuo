@@ -15,7 +15,8 @@ func NewMydsqlRepository(DB *gorm.DB) user.Repository {
 }
 
 func (mr *mysqlUserRepository) InsertData(data user.UserCore) error {
-	err := mr.DB.Create(toUserRecord(data))
+	recordData := toUserRecord(data)
+	err := mr.DB.Create(&recordData)
 	if err != nil {
 		return err.Error
 	}
