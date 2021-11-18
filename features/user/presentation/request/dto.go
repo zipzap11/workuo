@@ -2,6 +2,7 @@ package request
 
 import (
 	"time"
+	"workuo/features/user"
 )
 
 type UserRequest struct {
@@ -25,4 +26,38 @@ type ExperienceRequest struct {
 	Description string
 	StartDate   time.Time
 	EndDate     time.Time
+}
+
+func (sr *SkillsetRequest) toSkillsetCore() user.SkillsetCore {
+	return user.SkillsetCore{
+		Name:     sr.Name,
+		Category: sr.Category,
+	}
+}
+
+func toSkillsetsCore(srs []SkillsetRequest) []user.SkillsetCore {
+	convertedSkillset := []user.SkillsetCore{}
+	for _, skill := range srs {
+		convertedSkillset = append(convertedSkillset, skill.toSkillsetCore())
+	}
+
+	return convertedSkillset
+}
+
+func (ec *ExperienceRequest) toExperienceCore() user.ExperienceCore {
+	return user.ExperienceCore{
+		Title:       ec.Title,
+		Description: ec.Description,
+		StartDate:   ec.StartDate,
+		EndDate:     ec.EndDate,
+	}
+}
+
+func toExperiencesCore(ex []ExperienceRequest) []user.ExperienceCore {
+	convertedExperiences := []user.ExperienceCore{}
+	for _, exp := range ex {
+		convertedExperiences = append(convertedExperiences, exp.toExperienceCore())
+	}
+
+	return convertedExperiences
 }
