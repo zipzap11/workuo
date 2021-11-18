@@ -2,6 +2,7 @@ package data
 
 import (
 	"time"
+	"workuo/features/user"
 
 	"gorm.io/gorm"
 )
@@ -21,7 +22,7 @@ type User struct {
 type Skillset struct {
 	ID       uint
 	UserID   uint
-	Category uint
+	Category string
 }
 
 type Experience struct {
@@ -31,4 +32,15 @@ type Experience struct {
 	Title       string
 	StartDate   time.Time
 	EndDate     time.Time
+}
+
+func toSkillsetRecords(skillsets []user.SkillsetCore) []Skillset {
+	convertedSkillsets := []Skillset{}
+	for _, s := range skillsets {
+		convertedSkillsets = append(convertedSkillsets, Skillset{
+			Category: s.Category,
+		})
+	}
+
+	return convertedSkillsets
 }
