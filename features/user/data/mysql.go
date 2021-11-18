@@ -6,15 +6,15 @@ import (
 	"gorm.io/gorm"
 )
 
-type mysqlRepository struct {
+type mysqlUserRepository struct {
 	DB *gorm.DB
 }
 
 func NewMydsqlRepository(DB *gorm.DB) user.Repository {
-	return &mysqlRepository{}
+	return &mysqlUserRepository{}
 }
 
-func (mr *mysqlRepository) InsertData(data user.UserCore) error {
+func (mr *mysqlUserRepository) InsertData(data user.UserCore) error {
 	err := mr.DB.Create(toUserRecord(data))
 	if err != nil {
 		return err.Error
