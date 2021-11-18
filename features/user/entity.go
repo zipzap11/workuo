@@ -11,3 +11,11 @@ type UserCore struct {
 	Title   string
 	Bio     string
 }
+
+type Service interface {
+	RegisterUser(data UserCore) (err error)
+}
+
+type Bussiness interface {
+	InsertData(data UserCore) (err error)
+}
