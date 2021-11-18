@@ -44,3 +44,17 @@ func toSkillsetRecords(skillsets []user.SkillsetCore) []Skillset {
 
 	return convertedSkillsets
 }
+
+func toExperienceRecords(experiences []user.ExperienceCore) []Experience {
+	convertedExperiences := []Experience{}
+	for _, ex := range experiences {
+		convertedExperiences = append(convertedExperiences, Experience{
+			Title:       ex.Title,
+			Description: ex.Description,
+			StartDate:   ex.StartDate,
+			EndDate:     ex.EndDate,
+		})
+	}
+
+	return convertedExperiences
+}
