@@ -5,7 +5,7 @@ import "workuo/features/job"
 type Job struct {
 	Title        string   `json: "title"`
 	Description  string   `json: "description"`
-	RecruiterID  int      `json: "recruiter_id"`
+	RecruiterId  int      `json: "recruiter_id"`
 	Requirements []string `json: "requirements"`
 }
 
@@ -19,7 +19,7 @@ func (j *Job) ToCore() job.JobCore {
 
 	return job.JobCore{
 		Title:        j.Title,
-		Recruiter_id: j.RecruiterID,
+		RecruiterId:  j.RecruiterId,
 		Description:  j.Description,
 		Requirements: convertedRequirement,
 	}

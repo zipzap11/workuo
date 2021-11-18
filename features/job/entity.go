@@ -8,7 +8,7 @@ type JobCore struct {
 	ID           int
 	Title        string
 	Description  string
-	Recruiter_id int
+	RecruiterId  int
 	Requirements []RequirementCore
 	Created_at   time.Time
 	Updated_at   time.Time
@@ -16,7 +16,7 @@ type JobCore struct {
 
 type RequirementCore struct {
 	ID          uint
-	JobID       uint
+	JobId       uint
 	Description string
 }
 

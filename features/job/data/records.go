@@ -2,17 +2,15 @@ package data
 
 import (
 	"workuo/features/job"
-	"workuo/features/job/presentation/request"
 
 	"gorm.io/gorm"
 )
 
 type Job struct {
-	// ID int `gorm: primaryKey`
 	gorm.Model
 	Title        string
 	Description  string
-	Recruiter_id int
+	RecruiterId  int
 	Requirements []Requirement
 }
 
@@ -22,29 +20,33 @@ type Requirement struct {
 	Description string
 }
 
-func toRecord(requestData request.Job) Job {
+func toRecordRequirement(req job.RequirementCore) Requirement {
+	return Requirement{
+		Description: req.Description,
+	}
+}
+
+func toRecordJob(data job.JobCore) Job {
 	convertedRequirement := []Requirement{}
-	for _, req := range requestData.Requirements {
-		convertedRequirement = append(convertedRequirement, Requirement{
-			Description: req,
-		})
+	for _, req := range data.Requirements {
+		convertedRequirement = append(convertedRequirement, toRecordRequirement(req))
 	}
 	return Job{
-		Title:        requestData.Title,
-		Description:  requestData.Description,
-		Recruiter_id: requestData.RecruiterID,
+		Title:        data.Title,
+		Description:  data.Description,
+		RecruiterId:  data.RecruiterId,
 		Requirements: convertedRequirement,
 	}
 }
 
 func (j *Job) toCore() job.JobCore {
 	return job.JobCore{
-		ID:           int(j.ID),
-		Title:        j.Title,
-		Description:  j.Description,
-		Recruiter_id: j.Recruiter_id,
-		Created_at:   j.CreatedAt,
-		Updated_at:   j.UpdatedAt,
+		ID:          int(j.ID),
+		Title:       j.Title,
+		Description: j.Description,
+		RecruiterId: j.RecruiterId,
+		Created_at:  j.CreatedAt,
+		Updated_at:  j.UpdatedAt,
 	}
 }
 
