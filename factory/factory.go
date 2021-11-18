@@ -12,8 +12,7 @@ type jobPresenter struct {
 }
 
 func Init() jobPresenter {
-	DB := driver.InitDB()
-	jobData := data.NewMysqlJobRepository(DB)
+	jobData := data.NewMysqlJobRepository(driver.DB)
 	jobService := service.NewJobUseCase(jobData)
 
 	return jobPresenter{JobPresentation: *presentation.NewJobHandler(jobService)}
