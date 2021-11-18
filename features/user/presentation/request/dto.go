@@ -61,3 +61,16 @@ func toExperiencesCore(ex []ExperienceRequest) []user.ExperienceCore {
 
 	return convertedExperiences
 }
+
+func (ur *UserRequest) toUserCore() user.UserCore {
+	return user.UserCore{
+		Name:        ur.Name,
+		Address:     ur.Address,
+		Dob:         ur.Dob,
+		Gender:      ur.Gender,
+		Bio:         ur.Bio,
+		Title:       ur.Title,
+		Skillsets:   toSkillsetsCore(ur.Skillsets),
+		Experiences: toExperiencesCore(ur.Experiences),
+	}
+}
