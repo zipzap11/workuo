@@ -16,6 +16,6 @@ type Service interface {
 	RegisterUser(data UserCore) (err error)
 }
 
-type Bussiness interface {
+type Repository interface {
 	InsertData(data UserCore) (err error)
 }
