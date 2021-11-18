@@ -1,6 +1,6 @@
 package request
 
-// import "workuo/features/job/data"
+import "workuo/features/job"
 
 type Job struct {
 	Title        string   `json: "title"`
@@ -9,17 +9,18 @@ type Job struct {
 	Requirements []string `json: "requirements"`
 }
 
-// func (j *Job) toRecord() data.Job {
-// 	convertedRequirements := []data.Requirement{}
-// 	for _, req := range j.Requirements {
-// 		convertedRequirements = append(convertedRequirements, data.Requirement{
-// 			Description: req,
-// 		})
-// 	}
-// 	return data.Job{
-// 		Title: j.Title,
-// 		Description: j.Description,
-// 		Recruiter_id: j.RecruiterID,
-// 		Requirements: convertedRequirements,
-// 	}
-// }
+func (j *Job) toCore() job.JobCore {
+	convertedRequirement := []job.RequirementCore{}
+	for _, req := range j.Requirements {
+		convertedRequirement = append(convertedRequirement, job.RequirementCore{
+			Description: req,
+		})
+	}
+
+	return job.JobCore{
+		Title:        j.Title,
+		Recruiter_id: j.RecruiterID,
+		Description:  j.Description,
+		Requirements: convertedRequirement,
+	}
+}

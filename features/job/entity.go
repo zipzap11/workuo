@@ -2,7 +2,6 @@ package job
 
 import (
 	"time"
-	"workuo/features/job/presentation/request"
 )
 
 type JobCore struct {
@@ -22,7 +21,7 @@ type RequirementCore struct {
 }
 
 type Service interface {
-	CreateJobPost(data request.Job) (err error)
+	CreateJobPost(data JobCore) (err error)
 	// UpdateJobPost(data JobCore) (resp JobCore, err error)
 	// DeleteJobPost(id int) (err error)
 	// GetAllJobPost() (resp []JobCore, err error)
@@ -32,7 +31,7 @@ type Service interface {
 }
 
 type Data interface {
-	InsertData(data request.Job) (err error)
+	InsertData(data JobCore) (err error)
 	// SelectAllData() (resp []JobCore, err error)
 	// UpdatedData(data JobCore) (resp JobCore, err error)
 	// DeleteData(id int) (err error)
