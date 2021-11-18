@@ -5,7 +5,7 @@ import "workuo/features/job"
 type Job struct {
 	Title        string   `json: "title"`
 	Description  string   `json: "description"`
-	RecruiterId  int      `json: "recruiter_id"`
+	RecruiterId  int      `json: "recruiterId"`
 	Requirements []string `json: "requirements"`
 }
 
