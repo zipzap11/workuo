@@ -1,7 +1,6 @@
 package presentation
 
 import (
-	"fmt"
 	"net/http"
 	"workuo/features/job"
 	"workuo/features/job/presentation/request"
@@ -30,7 +29,6 @@ func (jh *JobHandler) CreateJobPostHandler(e echo.Context) error {
 	err = jh.jobService.CreateJobPost(payloadData)
 
 	if err != nil {
-		fmt.Println("error jobservice")
 		return e.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": err.Error(),
 		})
