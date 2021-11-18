@@ -62,7 +62,7 @@ func toExperiencesCore(ex []ExperienceRequest) []user.ExperienceCore {
 	return convertedExperiences
 }
 
-func (ur *UserRequest) toUserCore() user.UserCore {
+func (ur *UserRequest) ToUserCore() user.UserCore {
 	return user.UserCore{
 		Name:        ur.Name,
 		Address:     ur.Address,
