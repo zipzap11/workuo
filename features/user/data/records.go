@@ -58,3 +58,16 @@ func toExperienceRecords(experiences []user.ExperienceCore) []Experience {
 
 	return convertedExperiences
 }
+
+func toUserRecord(user user.UserCore) User {
+	return User{
+		Name:        user.Name,
+		Dob:         user.Dob,
+		Gender:      user.Gender,
+		Address:     user.Address,
+		Title:       user.Title,
+		Bio:         user.Bio,
+		Skillsets:   toSkillsetRecords(user.Skillsets),
+		Experiences: toExperienceRecords(user.Experiences),
+	}
+}
