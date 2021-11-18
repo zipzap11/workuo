@@ -26,7 +26,7 @@ func (jh *JobHandler) CreateJobPostHandler(e echo.Context) error {
 		})
 	}
 
-	err = jh.jobService.CreateJobPost(payloadData)
+	err = jh.jobService.CreateJobPost(payloadData.ToCore())
 
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, map[string]interface{}{

@@ -9,7 +9,7 @@ type Job struct {
 	Requirements []string `json: "requirements"`
 }
 
-func (j *Job) toCore() job.JobCore {
+func (j *Job) ToCore() job.JobCore {
 	convertedRequirement := []job.RequirementCore{}
 	for _, req := range j.Requirements {
 		convertedRequirement = append(convertedRequirement, job.RequirementCore{
