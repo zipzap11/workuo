@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"workuo/features/user"
 	"workuo/features/user/presentation/request"
+	"workuo/features/user/presentation/response"
 
 	"github.com/labstack/echo/v4"
 )
@@ -38,4 +39,19 @@ func (uh *UserHandler) RegisterUserHandler(e echo.Context) error {
 	return e.JSON(http.StatusOK, map[string]interface{}{
 		"message": "Success",
 	})
+}
+
+func (uh *UserHandler) GetAllUser(e echo.Context) error {
+	data, err := uh.userService.GetAllUser()
+	if err != nil {
+		return e.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": err.Error(),
+		})
+	}
+
+	return e.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Success",
+		"data":    response.ToUserResponseList(data),
+	})
+
 }
