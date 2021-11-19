@@ -124,3 +124,13 @@ func toUserCore(u User) user.UserCore {
 		Experiences: toExperienceCoreList(u.Experiences),
 	}
 }
+
+func toUserCoreList(uList []User) []user.UserCore {
+	convertedUser := []user.UserCore{}
+
+	for _, user := range uList {
+		convertedUser = append(convertedUser, toUserCore(user))
+	}
+
+	return convertedUser
+}
