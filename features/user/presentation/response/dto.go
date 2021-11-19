@@ -45,3 +45,21 @@ func toSkillestResponseList(skillList []user.SkillsetCore) []SkillsetResponse {
 
 	return convertedSkillset
 }
+
+func toExperienceResponse(experience user.ExperienceCore) ExperienceResponse {
+	return ExperienceResponse{
+		Title:       experience.Title,
+		Description: experience.Description,
+		StartDate:   experience.StartDate,
+		EndDate:     experience.EndDate,
+	}
+}
+
+func toExperienceResponseList(experienceList []user.ExperienceCore) []ExperienceResponse {
+	convertedExperiences := []ExperienceResponse{}
+	for _, exp := range experienceList {
+		convertedExperiences = append(convertedExperiences, toExperienceResponse(exp))
+	}
+
+	return convertedExperiences
+}
