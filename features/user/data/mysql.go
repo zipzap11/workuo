@@ -35,5 +35,5 @@ func (mr *mysqlUserRepository) GetData() ([]user.UserCore, error) {
 		return nil, err
 	}
 
-	return nil, nil
+	return toUserCoreList(users), nil
 }
