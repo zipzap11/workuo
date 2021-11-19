@@ -72,3 +72,27 @@ func toUserRecord(user user.UserCore) User {
 		Experiences: toExperienceRecords(user.Experiences),
 	}
 }
+
+func toExperienceCore(ex Experience) user.ExperienceCore {
+	return user.ExperienceCore{
+		Id:          ex.ID,
+		UserId:      ex.UserID,
+		Title:       ex.Title,
+		Description: ex.Description,
+		StartDate:   ex.StartDate,
+		EndDate:     ex.EndDate,
+	}
+}
+
+// func toUserCore(u User) user.UserCore {
+// 	return user.UserCore{
+// 		Id: u.ID,
+// 		Name: u.Name,
+// 		Dob: u.Dob,
+// 		Gender: u.Gender,
+// 		Title: u.Title,
+// 		Address: u.Address,
+// 		Bio: u.Bio,
+
+// 	}
+// }
