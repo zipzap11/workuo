@@ -38,6 +38,7 @@ func toSkillsetRecords(skillsets []user.SkillsetCore) []Skillset {
 	convertedSkillsets := []Skillset{}
 	for _, s := range skillsets {
 		convertedSkillsets = append(convertedSkillsets, Skillset{
+			Name:     s.Name,
 			Category: s.Category,
 		})
 	}
