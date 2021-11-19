@@ -1,6 +1,9 @@
 package response
 
-import "time"
+import (
+	"time"
+	"workuo/features/user"
+)
 
 type UserResponse struct {
 	Id          uint                 `json: "id"`
@@ -24,4 +27,21 @@ type ExperienceResponse struct {
 	Description string    `json: "description"`
 	StartDate   time.Time `json: "startDate"`
 	EndDate     time.Time `json: "startDate"`
+}
+
+func toSkillestResponse(skill user.SkillsetCore) SkillsetResponse {
+	return SkillsetResponse{
+		Name:     skill.Name,
+		Category: skill.Category,
+	}
+}
+
+func toSkillestResponseList(skillList []user.SkillsetCore) []SkillsetResponse {
+	convertedSkillset := []SkillsetResponse{}
+
+	for _, skill := range skillList {
+		convertedSkillset = append(convertedSkillset, toSkillestResponse(skill))
+	}
+
+	return convertedSkillset
 }
