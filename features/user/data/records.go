@@ -111,15 +111,16 @@ func toSkillsetCoreList(skillList []Skillset) []user.SkillsetCore {
 	return convertedSkillsets
 }
 
-// func toUserCore(u User) user.UserCore {
-// 	return user.UserCore{
-// 		Id: u.ID,
-// 		Name: u.Name,
-// 		Dob: u.Dob,
-// 		Gender: u.Gender,
-// 		Title: u.Title,
-// 		Address: u.Address,
-// 		Bio: u.Bio,
-
-// 	}
-// }
+func toUserCore(u User) user.UserCore {
+	return user.UserCore{
+		Id:          u.ID,
+		Name:        u.Name,
+		Dob:         u.Dob,
+		Gender:      u.Gender,
+		Title:       u.Title,
+		Address:     u.Address,
+		Bio:         u.Bio,
+		Skillsets:   toSkillsetCoreList(u.Skillsets),
+		Experiences: toExperienceCoreList(u.Experiences),
+	}
+}
