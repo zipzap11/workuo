@@ -31,8 +31,10 @@ type ExperienceCore struct {
 
 type Service interface {
 	RegisterUser(data UserCore) (err error)
+	GetAllUser() (users []UserCore, err error)
 }
 
 type Repository interface {
 	InsertData(data UserCore) (err error)
+	GetData() (user []UserCore, err error)
 }
