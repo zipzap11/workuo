@@ -22,10 +22,10 @@ type SkillsetRequest struct {
 }
 
 type ExperienceRequest struct {
-	Title       string
-	Description string
-	StartDate   time.Time
-	EndDate     time.Time
+	Title       string    `json: "title"`
+	Description string    `json: "description"`
+	StartDate   time.Time `json: "startDate"`
+	EndDate     time.Time `json: "endDate"`
 }
 
 func (sr *SkillsetRequest) toSkillsetCore() user.SkillsetCore {

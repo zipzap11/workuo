@@ -15,14 +15,14 @@ type User struct {
 	Address     string
 	Title       string
 	Bio         string
-	Skillsets   []Skillset `gorm: "many2many:user_skillsets;"`
+	Skillsets   []Skillset `gorm:"many2many:user_skillsets;"`
 	Experiences []Experience
 }
 
 type Skillset struct {
 	ID       uint
-	UserID   uint
 	Category string
+	Skill    string
 }
 
 type Experience struct {
