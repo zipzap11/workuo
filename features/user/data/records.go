@@ -84,13 +84,21 @@ func toExperienceCore(ex Experience) user.ExperienceCore {
 	}
 }
 
-func toExperienceCores(exp []Experience) []user.ExperienceCore {
+func toExperienceCoreList(expList []Experience) []user.ExperienceCore {
 	convertedExperience := []user.ExperienceCore{}
-	for _, ex := range exp {
+	for _, ex := range expList {
 		convertedExperience = append(convertedExperience, toExperienceCore(ex))
 	}
 
 	return convertedExperience
+}
+
+func toSkillsetCore(skill Skillset) user.SkillsetCore {
+	return user.SkillsetCore{
+		Id:       skill.ID,
+		Name:     skill.Name,
+		Category: skill.Category,
+	}
 }
 
 // func toUserCore(u User) user.UserCore {
