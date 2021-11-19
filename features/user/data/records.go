@@ -22,7 +22,7 @@ type User struct {
 type Skillset struct {
 	ID       uint
 	Category string
-	Skill    string
+	Name     string
 }
 
 type Experience struct {
