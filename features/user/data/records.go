@@ -101,6 +101,16 @@ func toSkillsetCore(skill Skillset) user.SkillsetCore {
 	}
 }
 
+func toSkillsetCoreList(skillList []Skillset) []user.SkillsetCore {
+	convertedSkillsets := []user.SkillsetCore{}
+
+	for _, skill := range skillList {
+		convertedSkillsets = append(convertedSkillsets, toSkillsetCore(skill))
+	}
+
+	return convertedSkillsets
+}
+
 // func toUserCore(u User) user.UserCore {
 // 	return user.UserCore{
 // 		Id: u.ID,
