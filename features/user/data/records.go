@@ -84,6 +84,15 @@ func toExperienceCore(ex Experience) user.ExperienceCore {
 	}
 }
 
+func toExperienceCores(exp []Experience) []user.ExperienceCore {
+	convertedExperience := []user.ExperienceCore{}
+	for _, ex := range exp {
+		convertedExperience = append(convertedExperience, toExperienceCore(ex))
+	}
+
+	return convertedExperience
+}
+
 // func toUserCore(u User) user.UserCore {
 // 	return user.UserCore{
 // 		Id: u.ID,
