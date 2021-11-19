@@ -14,7 +14,7 @@ func registerEntities() []Entity {
 		{Model: JobModel.Job{}},
 		{Model: JobModel.Requirement{}},
 		{Model: UserModel.User{}},
-		{Model: UserModel.Skillset{}},
 		{Model: UserModel.Experience{}},
+		{Model: UserModel.Skillset{}},
 	}
 }
