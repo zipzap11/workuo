@@ -77,3 +77,12 @@ func ToUserResponse(user user.UserCore) UserResponse {
 		Experiences: toExperienceResponseList(user.Experiences),
 	}
 }
+
+func ToUserResponseList(userList []user.UserCore) []UserResponse {
+	convertedUser := []UserResponse{}
+	for _, user := range userList {
+		convertedUser = append(convertedUser, ToUserResponse(user))
+	}
+
+	return convertedUser
+}
