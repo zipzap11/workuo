@@ -64,7 +64,7 @@ func toExperienceResponseList(experienceList []user.ExperienceCore) []Experience
 	return convertedExperiences
 }
 
-func toUserResponse(user user.UserCore) UserResponse {
+func ToUserResponse(user user.UserCore) UserResponse {
 	return UserResponse{
 		Id:          user.Id,
 		Name:        user.Name,
