@@ -29,18 +29,18 @@ type ExperienceResponse struct {
 	EndDate     time.Time `json: "startDate"`
 }
 
-func toSkillestResponse(skill user.SkillsetCore) SkillsetResponse {
+func toSkillsetResponse(skill user.SkillsetCore) SkillsetResponse {
 	return SkillsetResponse{
 		Name:     skill.Name,
 		Category: skill.Category,
 	}
 }
 
-func toSkillestResponseList(skillList []user.SkillsetCore) []SkillsetResponse {
+func toSkillsetResponseList(skillList []user.SkillsetCore) []SkillsetResponse {
 	convertedSkillset := []SkillsetResponse{}
 
 	for _, skill := range skillList {
-		convertedSkillset = append(convertedSkillset, toSkillestResponse(skill))
+		convertedSkillset = append(convertedSkillset, toSkillsetResponse(skill))
 	}
 
 	return convertedSkillset
@@ -62,4 +62,18 @@ func toExperienceResponseList(experienceList []user.ExperienceCore) []Experience
 	}
 
 	return convertedExperiences
+}
+
+func toUserResponse(user user.UserCore) UserResponse {
+	return UserResponse{
+		Id:          user.Id,
+		Name:        user.Name,
+		Dob:         user.Dob,
+		Gender:      user.Address,
+		Address:     user.Address,
+		Title:       user.Title,
+		Bio:         user.Bio,
+		Skillsets:   toSkillsetResponseList(user.Skillsets),
+		Experiences: toExperienceResponseList(user.Experiences),
+	}
 }
