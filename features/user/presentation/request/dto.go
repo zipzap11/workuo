@@ -30,6 +30,18 @@ type ExperienceRequest struct {
 	EndDate     time.Time `json: "endDate"`
 }
 
+type UserAuth struct {
+	Email    string `json: "email"`
+	Password string `json: "password"`
+}
+
+func (data *UserAuth) ToUserCore() user.UserCore {
+	return user.UserCore{
+		Email:    data.Email,
+		Password: data.Password,
+	}
+}
+
 func (sr *SkillsetRequest) toSkillsetCore() user.SkillsetCore {
 	return user.SkillsetCore{
 		Name:     sr.Name,

@@ -29,6 +29,13 @@ type ExperienceResponse struct {
 	EndDate     time.Time `json: "startDate"`
 }
 
+type UserLoginResponse struct {
+	Id    uint   `json: "id"`
+	Name  string `json: "name"`
+	Title string `json: "title"`
+	Token string `json: "token"`
+}
+
 func toSkillsetResponse(skill user.SkillsetCore) SkillsetResponse {
 	return SkillsetResponse{
 		Name:     skill.Name,
@@ -85,4 +92,13 @@ func ToUserResponseList(userList []user.UserCore) []UserResponse {
 	}
 
 	return convertedUser
+}
+
+func ToUserLoginResponse(user user.UserCore) UserLoginResponse {
+	return UserLoginResponse{
+		Id:    user.Id,
+		Name:  user.Name,
+		Title: user.Title,
+		Token: user.Token,
+	}
 }
