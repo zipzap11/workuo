@@ -3,6 +3,7 @@ package presentation
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"workuo/features/user"
 	"workuo/features/user/presentation/request"
 	"workuo/features/user/presentation/response"
@@ -75,16 +76,14 @@ func (uh *UserHandler) LoginUserHandler(e echo.Context) error {
 }
 
 func (uh *UserHandler) GetUserByIdHandler(e echo.Context) error {
-	var id uint
-	err := e.Bind(&id)
-
+	id, err := strconv.Atoi(e.Param("id"))
 	if err != nil {
 		return e.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": err.Error(),
 		})
 	}
 
-	data, err := uh.userService.GetUserById(user.UserCore{Id: id})
+	data, err := uh.userService.GetUserById(user.UserCore{Id: uint(id)})
 	if err != nil {
 		return e.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": err.Error(),
