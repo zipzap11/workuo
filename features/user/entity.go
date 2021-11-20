@@ -10,6 +10,8 @@ type UserCore struct {
 	Address     string
 	Title       string
 	Bio         string
+	Email       string
+	Password    string
 	Skillsets   []SkillsetCore
 	Experiences []ExperienceCore
 }
@@ -32,9 +34,11 @@ type ExperienceCore struct {
 type Service interface {
 	RegisterUser(data UserCore) (err error)
 	GetAllUser() (users []UserCore, err error)
+	LoginUser(data UserCore) (user UserCore, err error)
 }
 
 type Repository interface {
 	InsertData(data UserCore) (err error)
 	GetData() (user []UserCore, err error)
+	CheckData(data UserCore) (user UserCore, err error)
 }
