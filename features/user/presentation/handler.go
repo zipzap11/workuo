@@ -73,3 +73,27 @@ func (uh *UserHandler) LoginUserHandler(e echo.Context) error {
 	})
 
 }
+
+func (uh *UserHandler) GetUserByIdHandler(e echo.Context) error {
+	var id uint
+	err := e.Bind(&id)
+
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": err.Error(),
+		})
+	}
+
+	data, err := uh.userService.GetUserById(user.UserCore{Id: id})
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": err.Error(),
+		})
+	}
+
+	return e.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Success",
+		"data":    data,
+	})
+
+}
