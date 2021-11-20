@@ -15,6 +15,8 @@ type User struct {
 	Address     string
 	Title       string
 	Bio         string
+	Email       string
+	Password    string
 	Skillsets   []Skillset `gorm:"many2many:user_skillsets;"`
 	Experiences []Experience
 }
@@ -68,6 +70,8 @@ func toUserRecord(user user.UserCore) User {
 		Address:     user.Address,
 		Title:       user.Title,
 		Bio:         user.Bio,
+		Email:       user.Email,
+		Password:    user.Password,
 		Skillsets:   toSkillsetRecords(user.Skillsets),
 		Experiences: toExperienceRecords(user.Experiences),
 	}
