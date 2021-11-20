@@ -59,7 +59,6 @@ func (uh *UserHandler) GetAllUserHandler(e echo.Context) error {
 func (uh *UserHandler) LoginUserHandler(e echo.Context) error {
 	userAuth := request.UserAuth{}
 	e.Bind(&userAuth)
-
 	data, err := uh.userService.LoginUser(userAuth.ToUserCore())
 
 	if err != nil {
