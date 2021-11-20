@@ -42,6 +42,6 @@ type Service interface {
 type Repository interface {
 	InsertData(data UserCore) (err error)
 	GetData() (user []UserCore, err error)
-	GetDataById(user UserCore, err error)
+	GetDataById(data UserCore) (user UserCore, err error)
 	CheckUser(data UserCore) (user UserCore, err error)
 }
