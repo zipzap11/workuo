@@ -29,14 +29,6 @@ type ExperienceResponse struct {
 	EndDate     time.Time `json: "startDate"`
 }
 
-type UserLoginResponse struct {
-	Id    uint   `json: "id"`
-	Name  string `json: "name"`
-	Title string `json: "title"`
-	Bio   string `json: "bio"`
-	Token string `json: "token"`
-}
-
 func toSkillsetResponse(skill user.SkillsetCore) SkillsetResponse {
 	return SkillsetResponse{
 		Name:     skill.Name,
