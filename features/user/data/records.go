@@ -72,3 +72,65 @@ func toUserRecord(user user.UserCore) User {
 		Experiences: toExperienceRecords(user.Experiences),
 	}
 }
+
+func toExperienceCore(ex Experience) user.ExperienceCore {
+	return user.ExperienceCore{
+		Id:          ex.ID,
+		UserId:      ex.UserID,
+		Title:       ex.Title,
+		Description: ex.Description,
+		StartDate:   ex.StartDate,
+		EndDate:     ex.EndDate,
+	}
+}
+
+func toExperienceCoreList(expList []Experience) []user.ExperienceCore {
+	convertedExperience := []user.ExperienceCore{}
+	for _, ex := range expList {
+		convertedExperience = append(convertedExperience, toExperienceCore(ex))
+	}
+
+	return convertedExperience
+}
+
+func toSkillsetCore(skill Skillset) user.SkillsetCore {
+	return user.SkillsetCore{
+		Id:       skill.ID,
+		Name:     skill.Name,
+		Category: skill.Category,
+	}
+}
+
+func toSkillsetCoreList(skillList []Skillset) []user.SkillsetCore {
+	convertedSkillsets := []user.SkillsetCore{}
+
+	for _, skill := range skillList {
+		convertedSkillsets = append(convertedSkillsets, toSkillsetCore(skill))
+	}
+
+	return convertedSkillsets
+}
+
+func toUserCore(u User) user.UserCore {
+	return user.UserCore{
+		Id:          u.ID,
+		Name:        u.Name,
+		Dob:         u.Dob,
+		Gender:      u.Gender,
+		Title:       u.Title,
+		Address:     u.Address,
+		Bio:         u.Bio,
+		Skillsets:   toSkillsetCoreList(u.Skillsets),
+		Experiences: toExperienceCoreList(u.Experiences),
+	}
+}
+
+func toUserCoreList(uList []User) []user.UserCore {
+	convertedUser := []user.UserCore{}
+
+	for _, user := range uList {
+		convertedUser = append(convertedUser, toUserCore(user))
+	}
+
+	return convertedUser
+}

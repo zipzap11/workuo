@@ -26,3 +26,14 @@ func (mr *mysqlUserRepository) InsertData(data user.UserCore) error {
 
 	return nil
 }
+
+func (mr *mysqlUserRepository) GetData() ([]user.UserCore, error) {
+	var users []User
+
+	err := mr.DB.Preload("Skillsets").Preload("Experiences").Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return toUserCoreList(users), nil
+}
