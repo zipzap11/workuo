@@ -92,7 +92,7 @@ func (uh *UserHandler) GetUserByIdHandler(e echo.Context) error {
 
 	return e.JSON(http.StatusOK, map[string]interface{}{
 		"message": "Success",
-		"data":    data,
+		"data":    response.ToUserResponse(data),
 	})
 
 }
