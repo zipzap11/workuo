@@ -47,3 +47,13 @@ func (us *userService) LoginUser(data user.UserCore) (user.UserCore, error) {
 
 	return userData, nil
 }
+
+func (us *userService) GetUserById(data user.UserCore) (user.UserCore, error) {
+	userData, err := us.userRepository.GetDataById(data)
+
+	if err != nil {
+		return user.UserCore{}, err
+	}
+
+	return userData, nil
+}

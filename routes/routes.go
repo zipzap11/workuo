@@ -15,8 +15,10 @@ func New() *echo.Echo {
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
 	e.POST("/jobs", jobPresenter.JobPresentation.CreateJobPostHandler)
-	e.POST("/users/register", userPresenter.UserHandler.RegisterUserHandler)
+
 	e.GET("/users", userPresenter.UserHandler.GetAllUserHandler)
+	e.GET("/users/:id", userPresenter.UserHandler.GetUserByIdHandler)
+	e.POST("/users/register", userPresenter.UserHandler.RegisterUserHandler)
 	e.POST("/users/login", userPresenter.UserHandler.LoginUserHandler)
 	return e
 }
