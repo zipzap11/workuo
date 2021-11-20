@@ -69,7 +69,7 @@ func (uh *UserHandler) LoginUserHandler(e echo.Context) error {
 
 	return e.JSON(http.StatusOK, map[string]interface{}{
 		"message": "Success",
-		"data":    response.ToUserResponse(data),
+		"data":    response.ToUserLoginResponse(data),
 	})
 
 }
