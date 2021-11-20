@@ -2,7 +2,6 @@ package data
 
 import (
 	"errors"
-	"fmt"
 	"workuo/features/user"
 
 	"gorm.io/gorm"
@@ -17,9 +16,7 @@ func NewMysqlUserRepository(DB *gorm.DB) user.Repository {
 }
 
 func (mr *mysqlUserRepository) InsertData(data user.UserCore) error {
-	fmt.Println("data in repository ======", data)
 	recordData := toUserRecord(data)
-	fmt.Println("data in repository converted ======", recordData)
 	err := mr.DB.Create(&recordData)
 	if err != nil {
 		return err.Error
@@ -55,7 +52,7 @@ func (mr *mysqlUserRepository) CheckUser(data user.UserCore) (user.UserCore, err
 
 func (mr *mysqlUserRepository) GetDataById(data user.UserCore) (user.UserCore, error) {
 	var userData User
-	err := mr.DB.First(&userData, data.Id).Error
+	err := mr.DB.Preload("Skillsets").Preload("Experiences").First(&userData, data.Id).Error
 
 	if userData.Name == "" && userData.ID == 0 {
 		return user.UserCore{}, errors.New("no existing user")
