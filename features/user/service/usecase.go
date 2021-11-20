@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"workuo/features/user"
+	"workuo/middleware"
 )
 
 type userService struct {
@@ -35,6 +36,11 @@ func (us *userService) GetAllUser() ([]user.UserCore, error) {
 
 func (us *userService) LoginUser(data user.UserCore) (user.UserCore, error) {
 	userData, err := us.userRepository.CheckUser(data)
+	if err != nil {
+		return user.UserCore{}, err
+	}
+
+	userData.Token, err = middleware.CreateToken(userData.Id, userData.Name)
 	if err != nil {
 		return user.UserCore{}, err
 	}
