@@ -32,3 +32,12 @@ func (us *userService) GetAllUser() ([]user.UserCore, error) {
 
 	return users, nil
 }
+
+func (us *userService) LoginUser(data user.UserCore) (user.UserCore, error) {
+	userData, err := us.userRepository.CheckUser(data)
+	if err != nil {
+		return user.UserCore{}, err
+	}
+
+	return userData, nil
+}
