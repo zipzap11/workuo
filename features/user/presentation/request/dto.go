@@ -28,12 +28,12 @@ type ExperienceRequest struct {
 	EndDate     time.Time `json: "endDate"`
 }
 
-type UserLoginRequest struct {
+type UserAuth struct {
 	Email    string `json: "email"`
 	Password string `json: "password"`
 }
 
-func (data *UserLoginRequest) toUserCore() user.UserCore {
+func (data *UserAuth) ToUserCore() user.UserCore {
 	return user.UserCore{
 		Email:    data.Email,
 		Password: data.Password,
