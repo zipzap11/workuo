@@ -1,3 +1,3 @@
 package config
 
-const JWT_CONSTANT = "102ue123rqr398"
+const JWT_KEY = "102ue123rqr398"
