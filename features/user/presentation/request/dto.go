@@ -12,6 +12,8 @@ type UserRequest struct {
 	Gender      string              `json: "gender"`
 	Bio         string              `json: "bio"`
 	Title       string              `json: "title"`
+	Email       string              `json: "email"`
+	Password    string              `json: "password"`
 	Skillsets   []SkillsetRequest   `json: "skillsets"`
 	Experiences []ExperienceRequest `json: "experiences"`
 }
@@ -62,15 +64,17 @@ func toExperiencesCore(ex []ExperienceRequest) []user.ExperienceCore {
 	return convertedExperiences
 }
 
-func (ur *UserRequest) ToUserCore() user.UserCore {
+func (requestData *UserRequest) ToUserCore() user.UserCore {
 	return user.UserCore{
-		Name:        ur.Name,
-		Address:     ur.Address,
-		Dob:         ur.Dob,
-		Gender:      ur.Gender,
-		Bio:         ur.Bio,
-		Title:       ur.Title,
-		Skillsets:   toSkillsetsCore(ur.Skillsets),
-		Experiences: toExperiencesCore(ur.Experiences),
+		Name:        requestData.Name,
+		Address:     requestData.Address,
+		Dob:         requestData.Dob,
+		Gender:      requestData.Gender,
+		Bio:         requestData.Bio,
+		Title:       requestData.Title,
+		Email:       requestData.Email,
+		Password:    requestData.Password,
+		Skillsets:   toSkillsetsCore(requestData.Skillsets),
+		Experiences: toExperiencesCore(requestData.Experiences),
 	}
 }

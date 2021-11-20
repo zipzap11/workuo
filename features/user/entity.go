@@ -10,6 +10,8 @@ type UserCore struct {
 	Address     string
 	Title       string
 	Bio         string
+	Email       string
+	Password    string
 	Skillsets   []SkillsetCore
 	Experiences []ExperienceCore
 }
