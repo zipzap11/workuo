@@ -1,6 +1,7 @@
 package data
 
 import (
+	"errors"
 	"fmt"
 	"workuo/features/user"
 
@@ -40,8 +41,11 @@ func (mr *mysqlUserRepository) GetData() ([]user.UserCore, error) {
 
 func (mr *mysqlUserRepository) CheckUser(data user.UserCore) (user.UserCore, error) {
 	var userData User
-	err := mr.DB.Where("email = ? and password = ?", data.Email, data.Password).Preload("Skillsets").Preload("Experiences").Find(&userData).Error
+	err := mr.DB.Where("email = ? and password = ?", data.Email, data.Password).First(&userData).Error
 
+	if userData.Name == "" && userData.ID == 0 {
+		return user.UserCore{}, errors.New("no existing user")
+	}
 	if err != nil {
 		return user.UserCore{}, err
 	}
