@@ -39,12 +39,12 @@ func (mr *mysqlUserRepository) GetData() ([]user.UserCore, error) {
 }
 
 func (mr *mysqlUserRepository) CheckUser(data user.UserCore) (user.UserCore, error) {
-	var users User
-	err := mr.DB.Where("email = ? and password = ?", data.Email, data.Password).Preload("Skillsets").Preload("Experiences").Find(&users).Error
+	var userData User
+	err := mr.DB.Where("email = ? and password = ?", data.Email, data.Password).Preload("Skillsets").Preload("Experiences").Find(&userData).Error
 
 	if err != nil {
 		return user.UserCore{}, err
 	}
 
-	return toUserCore(users), nil
+	return toUserCore(userData), nil
 }
