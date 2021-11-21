@@ -63,3 +63,16 @@ func (mr *mysqlUserRepository) GetDataById(data user.UserCore) (user.UserCore, e
 
 	return toUserCore(userData), nil
 }
+
+func (mr *mysqlUserRepository) GetDataByTitle(data user.UserCore) ([]user.UserCore, error) {
+	var userData []User
+
+	queryStr := "%" + data.Title + "%"
+	err := mr.DB.Where("title like ?", queryStr).Preload("Skillsets").Preload("Experiences").First(&userData).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return toUserCoreList(userData), nil
+}
