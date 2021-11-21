@@ -1,10 +1,12 @@
 package recruiter
 
 type RecruiterCore struct {
-	ID      uint
-	Company string
-	Address string
-	Bio     string
+	ID       uint
+	Company  string
+	Address  string
+	Bio      string
+	Email    string
+	Password string
 }
 
 type Service interface {
