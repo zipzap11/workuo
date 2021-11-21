@@ -42,8 +42,9 @@ func (uh *UserHandler) RegisterUserHandler(e echo.Context) error {
 	})
 }
 
-func (uh *UserHandler) GetAllUserHandler(e echo.Context) error {
-	data, err := uh.userService.GetAllUser()
+func (uh *UserHandler) GetUsersHandler(e echo.Context) error {
+	title := e.QueryParam("title")
+	data, err := uh.userService.GetUsers(user.UserCore{Title: title})
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": err.Error(),

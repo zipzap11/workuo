@@ -5,16 +5,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type User struct {
-	nama string
-	buku []Buku
-}
-
-type Buku struct {
-	Id    int
-	judul string
-}
-
 var DB *gorm.DB
 
 func InitDB() {

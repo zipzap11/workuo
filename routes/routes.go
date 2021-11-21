@@ -18,7 +18,7 @@ func New() *echo.Echo {
 	e.POST("/jobs", presenter.JobPresentation.CreateJobPostHandler)
 
 	// user
-	e.GET("/users", presenter.UserPresentation.GetAllUserHandler)
+	e.GET("/users", presenter.UserPresentation.GetUsersHandler)
 	e.GET("/users/:id", presenter.UserPresentation.GetUserByIdHandler)
 	e.POST("/users/register", presenter.UserPresentation.RegisterUserHandler)
 	e.POST("/users/login", presenter.UserPresentation.LoginUserHandler)

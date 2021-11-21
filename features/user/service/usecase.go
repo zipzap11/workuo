@@ -25,8 +25,8 @@ func (us *userService) RegisterUser(data user.UserCore) error {
 	return nil
 }
 
-func (us *userService) GetAllUser() ([]user.UserCore, error) {
-	users, err := us.userRepository.GetData()
+func (us *userService) GetUsers(data user.UserCore) ([]user.UserCore, error) {
+	users, err := us.userRepository.GetData(data)
 	if err != nil {
 		return nil, err
 	}
