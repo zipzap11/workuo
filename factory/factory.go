@@ -2,17 +2,26 @@ package factory
 
 import (
 	"workuo/driver"
+	//job domain
 	jobData "workuo/features/job/data"
 	jobPresent "workuo/features/job/presentation"
 	jobService "workuo/features/job/service"
+
+	// user domain
 	userData "workuo/features/user/data"
 	userPresent "workuo/features/user/presentation"
 	userService "workuo/features/user/service"
+
+	// recruiter domain
+	recruiterData "workuo/features/recruiter/data"
+	recruiterPresent "workuo/features/recruiter/presentation"
+	recruiterService "workuo/features/recruiter/service"
 )
 
 type jobPresenter struct {
-	JobPresentation  jobPresent.JobHandler
-	UserPresentation userPresent.UserHandler
+	JobPresentation       jobPresent.JobHandler
+	UserPresentation      userPresent.UserHandler
+	RecruiterPresentation recruiterPresent.RecruiterHandler
 }
 
 func Init() jobPresenter {
@@ -24,8 +33,13 @@ func Init() jobPresenter {
 	userData := userData.NewMysqlUserRepository(driver.DB)
 	userService := userService.NewUserService(userData)
 
+	// recruiter layer
+	recruiterData := recruiterData.NewRecruiterRepository(driver.DB)
+	recruiterService := recruiterService.NewRecruiterService(recruiterData)
+
 	return jobPresenter{
-		JobPresentation:  *jobPresent.NewJobHandler(jobService),
-		UserPresentation: *userPresent.NewUserHandler(userService),
+		JobPresentation:       *jobPresent.NewJobHandler(jobService),
+		UserPresentation:      *userPresent.NewUserHandler(userService),
+		RecruiterPresentation: *recruiterPresent.NewRecruiterHandler(recruiterService),
 	}
 }
