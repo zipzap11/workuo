@@ -2,18 +2,30 @@ package factory
 
 import (
 	"workuo/driver"
-	"workuo/features/job/data"
-	"workuo/features/job/presentation"
-	"workuo/features/job/service"
+	jobData "workuo/features/job/data"
+	jobPresent "workuo/features/job/presentation"
+	jobService "workuo/features/job/service"
+	userData "workuo/features/user/data"
+	userPresent "workuo/features/user/presentation"
+	userService "workuo/features/user/service"
 )
 
 type jobPresenter struct {
-	JobPresentation presentation.JobHandler
+	JobPresentation  jobPresent.JobHandler
+	UserPresentation userPresent.UserHandler
 }
 
 func Init() jobPresenter {
-	jobData := data.NewMysqlJobRepository(driver.DB)
-	jobService := service.NewJobUseCase(jobData)
+	// job layer
+	jobData := jobData.NewMysqlJobRepository(driver.DB)
+	jobService := jobService.NewJobUseCase(jobData)
 
-	return jobPresenter{JobPresentation: *presentation.NewJobHandler(jobService)}
+	// user layer
+	userData := userData.NewMysqlUserRepository(driver.DB)
+	userService := userService.NewUserService(userData)
+
+	return jobPresenter{
+		JobPresentation:  *jobPresent.NewJobHandler(jobService),
+		UserPresentation: *userPresent.NewUserHandler(userService),
+	}
 }
