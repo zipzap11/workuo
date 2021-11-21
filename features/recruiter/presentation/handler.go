@@ -19,7 +19,7 @@ func NewRecruiterHandler(data recruiter.Service) *RecruiterHandler {
 func (rh *RecruiterHandler) RegisterRecruiterHandler(e echo.Context) error {
 	reqData := request.RecruiterRequest{}
 
-	err := e.Bind(reqData)
+	err := e.Bind(&reqData)
 	if err != nil {
 		return e.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": err.Error(),
