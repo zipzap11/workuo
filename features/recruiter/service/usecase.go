@@ -20,3 +20,12 @@ func (rs *recruiterService) RegisterRecruiter(data recruiter.RecruiterCore) erro
 
 	return nil
 }
+
+func (rs *recruiterService) LoginRecruiter(data recruiter.RecruiterCore) error {
+	err := rs.recruiterRepository.CheckRecruiter(data)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
