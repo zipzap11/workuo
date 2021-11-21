@@ -15,7 +15,8 @@ func NewRecruiterRepository(DB *gorm.DB) recruiter.Repository {
 }
 
 func (rp *RecruiterRepository) CreateRecruiter(data recruiter.RecruiterCore) error {
-	err := rp.DB.Create(FromCore(data)).Error
+	convertedData := FromCore(data)
+	err := rp.DB.Create(&convertedData).Error
 	if err != nil {
 		return err
 	}
