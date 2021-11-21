@@ -15,11 +15,18 @@ type RecruiterLogin struct {
 	Password string `json: "password"`
 }
 
-func ToCore(data RecruiterRequest) recruiter.RecruiterCore {
+func FromRecruiterRequest(data RecruiterRequest) recruiter.RecruiterCore {
 	return recruiter.RecruiterCore{
 		Company:  data.Company,
 		Address:  data.Address,
 		Bio:      data.Bio,
+		Email:    data.Email,
+		Password: data.Password,
+	}
+}
+
+func FromRecruiterLogin(data RecruiterLogin) recruiter.RecruiterCore {
+	return recruiter.RecruiterCore{
 		Email:    data.Email,
 		Password: data.Password,
 	}
