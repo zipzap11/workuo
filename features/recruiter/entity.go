@@ -11,8 +11,10 @@ type RecruiterCore struct {
 
 type Service interface {
 	RegisterRecruiter(data RecruiterCore) error
+	LoginRecruiter(data RecruiterCore) error
 }
 
 type Repository interface {
 	CreateRecruiter(data RecruiterCore) error
+	CheckRecruiter(data RecruiterCore) error
 }
