@@ -25,17 +25,17 @@ func (rp *RecruiterRepository) CreateRecruiter(data recruiter.RecruiterCore) err
 	return nil
 }
 
-func (rp *RecruiterRepository) CheckRecruiter(data recruiter.RecruiterCore) error {
+func (rp *RecruiterRepository) CheckRecruiter(data recruiter.RecruiterCore) (recruiter.RecruiterCore, error) {
 	var recruiterData Recruiter
 
 	err := rp.DB.Where("email = ? and password = ?", data.Email, data.Password).First(&recruiterData).Error
 	if err != nil {
-		return err
+		return recruiter.RecruiterCore{}, err
 	}
 
 	if recruiterData.ID == 0 && recruiterData.Email == "" {
-		return errors.New("no existing recruiter")
+		return recruiter.RecruiterCore{}, errors.New("no existing recruiter")
 	}
 
-	return nil
+	return ToCore(recruiterData), nil
 }
