@@ -26,7 +26,7 @@ func (rh *RecruiterHandler) RegisterRecruiterHandler(e echo.Context) error {
 		})
 	}
 
-	err = rh.recruiterService.RegisterRecruiter(request.ToCore(reqData))
+	err = rh.recruiterService.RegisterRecruiter(request.FromRecruiterRequest(reqData))
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": err.Error(),
@@ -36,4 +36,20 @@ func (rh *RecruiterHandler) RegisterRecruiterHandler(e echo.Context) error {
 	return e.JSON(http.StatusOK, map[string]interface{}{
 		"message": "Success",
 	})
+}
+
+func (rp *RecruiterHandler) LoginRecruiterHandler(e echo.Context) error {
+	var recruiterLogin request.RecruiterLogin
+
+	err := e.Bind(&recruiterLogin)
+	if err != nil {
+		return err
+	}
+
+	err = rp.recruiterService.LoginRecruiter(request.FromRecruiterLogin(recruiterLogin))
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
