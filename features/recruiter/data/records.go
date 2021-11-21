@@ -13,7 +13,7 @@ type Recruiter struct {
 	Address string
 }
 
-func fromCore(data recruiter.RecruiterCore) Recruiter {
+func FromCore(data recruiter.RecruiterCore) Recruiter {
 	return Recruiter{
 		Company: data.Company,
 		Bio:     data.Bio,
