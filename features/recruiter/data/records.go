@@ -24,3 +24,14 @@ func FromCore(data recruiter.RecruiterCore) Recruiter {
 		Password: data.Password,
 	}
 }
+
+func ToCore(data Recruiter) recruiter.RecruiterCore {
+	return recruiter.RecruiterCore{
+		ID:       data.ID,
+		Company:  data.Company,
+		Address:  data.Address,
+		Bio:      data.Bio,
+		Email:    data.Email,
+		Password: data.Password,
+	}
+}
