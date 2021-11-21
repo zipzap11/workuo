@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"workuo/features/recruiter"
 	"workuo/features/recruiter/presentation/request"
+	"workuo/features/recruiter/presentation/response"
 
 	"github.com/labstack/echo/v4"
 )
@@ -48,7 +49,7 @@ func (rp *RecruiterHandler) LoginRecruiterHandler(e echo.Context) error {
 		})
 	}
 
-	err = rp.recruiterService.LoginRecruiter(request.FromRecruiterLogin(recruiterLogin))
+	data, err := rp.recruiterService.LoginRecruiter(request.FromRecruiterLogin(recruiterLogin))
 	if err != nil {
 		return e.JSON(http.StatusForbidden, map[string]interface{}{
 			"message": err.Error(),
@@ -57,5 +58,6 @@ func (rp *RecruiterHandler) LoginRecruiterHandler(e echo.Context) error {
 
 	return e.JSON(http.StatusOK, map[string]interface{}{
 		"message": "successs",
+		"data":    response.ToRecruiterLoginResponse(data),
 	})
 }
