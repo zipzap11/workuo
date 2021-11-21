@@ -7,6 +7,7 @@ type RecruiterCore struct {
 	Bio      string
 	Email    string
 	Password string
+	Token    string
 }
 
 type Service interface {
