@@ -96,3 +96,20 @@ func (uh *UserHandler) GetUserByIdHandler(e echo.Context) error {
 	})
 
 }
+
+func (uh *UserHandler) GetUserByTitleHandler(e echo.Context) error {
+	title := e.QueryParam("title")
+
+	data, err := uh.userService.GetUserByTitle(user.UserCore{Title: title})
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": err.Error(),
+		})
+	}
+
+	return e.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Success",
+		"data":    response.ToUserResponseList(data),
+	})
+
+}
