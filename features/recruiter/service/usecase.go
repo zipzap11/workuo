@@ -21,11 +21,11 @@ func (rs *recruiterService) RegisterRecruiter(data recruiter.RecruiterCore) erro
 	return nil
 }
 
-func (rs *recruiterService) LoginRecruiter(data recruiter.RecruiterCore) error {
-	err := rs.recruiterRepository.CheckRecruiter(data)
+func (rs *recruiterService) LoginRecruiter(data recruiter.RecruiterCore) (recruiter.RecruiterCore, error) {
+	data, err := rs.recruiterRepository.CheckRecruiter(data)
 	if err != nil {
-		return err
+		return recruiter.RecruiterCore{}, err
 	}
 
-	return nil
+	return data, nil
 }
