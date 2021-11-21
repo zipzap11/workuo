@@ -25,8 +25,8 @@ func (us *userService) RegisterUser(data user.UserCore) error {
 	return nil
 }
 
-func (us *userService) GetAllUser() ([]user.UserCore, error) {
-	users, err := us.userRepository.GetData()
+func (us *userService) GetUsers(data user.UserCore) ([]user.UserCore, error) {
+	users, err := us.userRepository.GetData(data)
 	if err != nil {
 		return nil, err
 	}
@@ -53,16 +53,6 @@ func (us *userService) GetUserById(data user.UserCore) (user.UserCore, error) {
 
 	if err != nil {
 		return user.UserCore{}, err
-	}
-
-	return userData, nil
-}
-
-func (us *userService) GetUserByTitle(data user.UserCore) ([]user.UserCore, error) {
-	userData, err := us.userRepository.GetDataByTitle(data)
-
-	if err != nil {
-		return nil, err
 	}
 
 	return userData, nil
