@@ -8,17 +8,19 @@ import (
 )
 
 func New() *echo.Echo {
-	jobPresenter := factory.Init()
-	userPresenter := factory.InitUser()
+	presenter := factory.Init()
+
 	e := echo.New()
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
-	e.POST("/jobs", jobPresenter.JobPresentation.CreateJobPostHandler)
+	// job
+	e.POST("/jobs", presenter.JobPresentation.CreateJobPostHandler)
 
-	e.GET("/users", userPresenter.UserHandler.GetAllUserHandler)
-	e.GET("/users/:id", userPresenter.UserHandler.GetUserByIdHandler)
-	e.POST("/users/register", userPresenter.UserHandler.RegisterUserHandler)
-	e.POST("/users/login", userPresenter.UserHandler.LoginUserHandler)
+	// user
+	e.GET("/users", presenter.UserPresentation.GetAllUserHandler)
+	e.GET("/users/:id", presenter.UserPresentation.GetUserByIdHandler)
+	e.POST("/users/register", presenter.UserPresentation.RegisterUserHandler)
+	e.POST("/users/login", presenter.UserPresentation.LoginUserHandler)
 	return e
 }
