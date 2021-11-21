@@ -57,3 +57,13 @@ func (us *userService) GetUserById(data user.UserCore) (user.UserCore, error) {
 
 	return userData, nil
 }
+
+func (us *userService) GetUserByTitle(data user.UserCore) ([]user.UserCore, error) {
+	userData, err := us.userRepository.GetDataByTitle(data)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return userData, nil
+}
