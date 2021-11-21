@@ -43,13 +43,19 @@ func (rp *RecruiterHandler) LoginRecruiterHandler(e echo.Context) error {
 
 	err := e.Bind(&recruiterLogin)
 	if err != nil {
-		return err
+		return e.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": err.Error(),
+		})
 	}
 
 	err = rp.recruiterService.LoginRecruiter(request.FromRecruiterLogin(recruiterLogin))
 	if err != nil {
-		return err
+		return e.JSON(http.StatusForbidden, map[string]interface{}{
+			"message": err.Error(),
+		})
 	}
 
-	return nil
+	return e.JSON(http.StatusOK, map[string]interface{}{
+		"message": "successs",
+	})
 }
