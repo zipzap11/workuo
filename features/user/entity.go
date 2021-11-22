@@ -34,14 +34,16 @@ type ExperienceCore struct {
 
 type Service interface {
 	RegisterUser(data UserCore) (err error)
+	LoginUser(data UserCore) (user UserCore, err error)
 	GetUsers(data UserCore) (users []UserCore, err error)
 	GetUserById(data UserCore) (user UserCore, err error)
-	LoginUser(data UserCore) (user UserCore, err error)
+	GetUserBySkillsets(data UserCore) (users []UserCore, err error)
 }
 
 type Repository interface {
 	InsertData(data UserCore) (err error)
+	CheckUser(data UserCore) (user UserCore, err error)
 	GetData(UserCore) (user []UserCore, err error)
 	GetDataById(data UserCore) (user UserCore, err error)
-	CheckUser(data UserCore) (user UserCore, err error)
+	GetDataBySkillsets(data UserCore) (users []UserCore, err error)
 }
