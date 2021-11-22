@@ -43,8 +43,18 @@ func (uh *UserHandler) RegisterUserHandler(e echo.Context) error {
 }
 
 func (uh *UserHandler) GetUsersHandler(e echo.Context) error {
-	title := e.QueryParam("title")
-	data, err := uh.userService.GetUsers(user.UserCore{Title: title})
+	var filter request.UserFilter
+	err := e.Bind(&filter)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": err.Error(),
+		})
+	}
+
+	data, err := uh.userService.GetUsers(user.UserCore{
+		Title:     filter.Title,
+		Skillsets: request.ToSkillsetsCore(filter.Skillsets),
+	})
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": err.Error(),
