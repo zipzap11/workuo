@@ -35,6 +35,11 @@ type UserAuth struct {
 	Password string `json: "password"`
 }
 
+type UserFilter struct {
+	Title     string            `json: "title"`
+	Skillsets []SkillsetRequest `json: "skillsets`
+}
+
 func (data *UserAuth) ToUserCore() user.UserCore {
 	return user.UserCore{
 		Email:    data.Email,
@@ -49,7 +54,7 @@ func (sr *SkillsetRequest) toSkillsetCore() user.SkillsetCore {
 	}
 }
 
-func toSkillsetsCore(srs []SkillsetRequest) []user.SkillsetCore {
+func ToSkillsetsCore(srs []SkillsetRequest) []user.SkillsetCore {
 	convertedSkillset := []user.SkillsetCore{}
 	for _, skill := range srs {
 		convertedSkillset = append(convertedSkillset, skill.toSkillsetCore())
@@ -86,7 +91,7 @@ func (requestData *UserRequest) ToUserCore() user.UserCore {
 		Title:       requestData.Title,
 		Email:       requestData.Email,
 		Password:    requestData.Password,
-		Skillsets:   toSkillsetsCore(requestData.Skillsets),
+		Skillsets:   ToSkillsetsCore(requestData.Skillsets),
 		Experiences: toExperiencesCore(requestData.Experiences),
 	}
 }
