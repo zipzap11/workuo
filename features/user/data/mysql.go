@@ -65,3 +65,14 @@ func (mr *mysqlUserRepository) GetDataById(data user.UserCore) (user.UserCore, e
 
 	return toUserCore(userData), nil
 }
+
+func (mr *mysqlUserRepository) GetDataBySkillsets(data user.UserCore) ([]user.UserCore, error) {
+	var users []User
+	// queryStr := "%" + data.
+	err := mr.DB.Preload("Skillsets").Preload("Experiences").Joins("JOIN user_skillsets ON user_skillsets.user_id = user.id JOIN skillsets ON skillsets.id = user_skillsets.skillset_id AND skillsets LIKE = ?", ("%" + data.Skillsets[0].Name + "%")).Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return toUserCoreList(users), nil
+}
