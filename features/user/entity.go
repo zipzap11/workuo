@@ -37,7 +37,6 @@ type Service interface {
 	LoginUser(data UserCore) (user UserCore, err error)
 	GetUsers(data UserCore) (users []UserCore, err error)
 	GetUserById(data UserCore) (user UserCore, err error)
-	GetUserBySkillsets(data UserCore) (users []UserCore, err error)
 }
 
 type Repository interface {
@@ -45,5 +44,4 @@ type Repository interface {
 	CheckUser(data UserCore) (user UserCore, err error)
 	GetData(UserCore) (user []UserCore, err error)
 	GetDataById(data UserCore) (user UserCore, err error)
-	GetDataBySkillsets(data UserCore) (users []UserCore, err error)
 }
