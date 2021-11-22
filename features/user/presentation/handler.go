@@ -1,7 +1,6 @@
 package presentation
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"workuo/features/user"
@@ -23,7 +22,6 @@ func (uh *UserHandler) RegisterUserHandler(e echo.Context) error {
 	userData := request.UserRequest{}
 
 	err := e.Bind(&userData)
-	fmt.Println("data in handler =====", userData)
 	if err != nil {
 		return e.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": err.Error(),
