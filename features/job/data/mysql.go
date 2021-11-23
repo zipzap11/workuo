@@ -25,11 +25,11 @@ func (jr *mysqlJobRepository) InsertData(data job.JobCore) error {
 }
 
 func (jr *mysqlJobRepository) GetJobData(data job.JobCore) ([]job.JobCore, error) {
-	jobData := []Job{}
-	err := jr.DB.Preload("Requirements").Find(&jobData).Error
+	var jobs []Job
+	err := jr.DB.Preload("Requirements").Find(&jobs).Error
 	if err != nil {
 		return nil, err
 	}
 
-	return toCoreList(jobData), nil
+	return toCoreList(jobs), nil
 }
