@@ -16,6 +16,7 @@ func New() *echo.Echo {
 	}))
 	// job
 	e.POST("/jobs", presenter.JobPresentation.CreateJobPostHandler)
+	e.GET("/jobs", presenter.JobPresentation.GetJobPostHandler)
 
 	// user
 	e.GET("/users", presenter.UserPresentation.GetUsersHandler)
