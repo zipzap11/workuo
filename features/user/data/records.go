@@ -24,7 +24,7 @@ type User struct {
 type Skillset struct {
 	ID       uint
 	Category string
-	Name     string
+	Name     string `gorm: "unique;"`
 }
 
 type Experience struct {
