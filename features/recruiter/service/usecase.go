@@ -35,3 +35,12 @@ func (rs *recruiterService) LoginRecruiter(data recruiter.RecruiterCore) (recrui
 
 	return data, nil
 }
+
+func (rs *recruiterService) GetRecruiters(data recruiter.RecruiterCore) ([]recruiter.RecruiterCore, error) {
+	recruiters, err := rs.recruiterRepository.GetRecruiters(data)
+	if err != nil {
+		return nil, err
+	}
+
+	return recruiters, nil
+}
