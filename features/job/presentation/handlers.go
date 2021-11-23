@@ -2,6 +2,7 @@ package presentation
 
 import (
 	"net/http"
+	"strconv"
 	"workuo/features/job"
 	"workuo/features/job/presentation/request"
 	"workuo/features/job/presentation/response"
@@ -49,4 +50,17 @@ func (jh *JobHandler) GetJobPostHandler(e echo.Context) error {
 	}
 
 	return response.NewSuccessResponse(e, "success", response.ToJobResponseList(data))
+}
+
+func (jh *JobHandler) GetJobPostByIdHandler(e echo.Context) error {
+	id, err := strconv.Atoi(e.Param("id"))
+	if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
+	}
+	data, err := jh.jobService.GetJobPostById(job.JobCore{ID: id})
+	if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
+	}
+
+	return response.NewSuccessResponse(e, "success", response.ToJobResponse(data))
 }
