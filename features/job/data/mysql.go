@@ -14,24 +14,22 @@ func NewMysqlJobRepository(DB *gorm.DB) job.Data {
 	return &mysqlJobRepository{DB}
 }
 
-func (j *mysqlJobRepository) InsertData(data job.JobCore) error {
-	// convertedRequirement := []Requirement{}
-	// for _, req := range data.Requirements {
-	// 	convertedRequirement = append(convertedRequirement, Requirement{
-	// 		Description: req,
-	// 	})
-	// }
-	// convertedData := Job{
-	// 	Title:        data.Title,
-	// 	Description:  data.Description,
-	// 	Recruiter_id: data.RecruiterID,
-	// 	Requirements: convertedRequirement,
-	// }
+func (jr *mysqlJobRepository) InsertData(data job.JobCore) error {
 	recordData := toRecordJob(data)
-	result := j.DB.Create(&recordData)
+	result := jr.DB.Create(&recordData)
 	if result.Error != nil {
 		return result.Error
 	}
 
 	return nil
+}
+
+func (jr *mysqlJobRepository) GetJobData(data job.JobCore) ([]job.JobCore, error) {
+	jobData := []Job{}
+	err := jr.DB.Preload("Requirements").Find(&jobData).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return toCoreList(jobData), nil
 }
