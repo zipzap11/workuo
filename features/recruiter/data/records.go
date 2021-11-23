@@ -35,3 +35,12 @@ func ToCore(data Recruiter) recruiter.RecruiterCore {
 		Password: data.Password,
 	}
 }
+
+func ToCoreList(data []Recruiter) []recruiter.RecruiterCore {
+	convertedData := []recruiter.RecruiterCore{}
+	for _, rec := range data {
+		convertedData = append(convertedData, ToCore(rec))
+	}
+
+	return convertedData
+}
