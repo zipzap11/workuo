@@ -44,3 +44,12 @@ func (rs *recruiterService) GetRecruiters() ([]recruiter.RecruiterCore, error) {
 
 	return recruiters, nil
 }
+
+func (rs *recruiterService) GetRecruiterById(data recruiter.RecruiterCore) (recruiter.RecruiterCore, error) {
+	recruiterData, err := rs.recruiterRepository.GetRecruiterById(data)
+	if err != nil {
+		return recruiter.RecruiterCore{}, err
+	}
+
+	return recruiterData, nil
+}

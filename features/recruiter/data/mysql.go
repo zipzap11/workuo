@@ -50,3 +50,14 @@ func (rp *RecruiterRepository) GetRecruiters() ([]recruiter.RecruiterCore, error
 
 	return ToCoreList(recruiters), nil
 }
+
+func (rp *RecruiterRepository) GetRecruiterById(data recruiter.RecruiterCore) (recruiter.RecruiterCore, error) {
+	var recruiterData Recruiter
+
+	err := rp.DB.First(&recruiterData, data.ID).Error
+	if err != nil {
+		return recruiter.RecruiterCore{}, err
+	}
+
+	return ToCore(recruiterData), nil
+}

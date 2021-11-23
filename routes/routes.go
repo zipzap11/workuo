@@ -28,5 +28,7 @@ func New() *echo.Echo {
 	e.POST("/recruiters/register", presenter.RecruiterPresentation.RegisterRecruiterHandler)
 	e.POST("/recruiters/login", presenter.RecruiterPresentation.LoginRecruiterHandler)
 	e.GET("/recruiters", presenter.RecruiterPresentation.GetRecruitersHandler)
+	e.GET("/recruiters/:id", presenter.RecruiterPresentation.GetRecruiterByIdHandler)
+
 	return e
 }
