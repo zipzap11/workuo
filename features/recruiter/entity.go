@@ -14,10 +14,12 @@ type Service interface {
 	RegisterRecruiter(data RecruiterCore) error
 	LoginRecruiter(data RecruiterCore) (RecruiterCore, error)
 	GetRecruiters() ([]RecruiterCore, error)
+	GetRecruiterById(data RecruiterCore) (RecruiterCore, error)
 }
 
 type Repository interface {
 	CreateRecruiter(data RecruiterCore) error
 	CheckRecruiter(data RecruiterCore) (RecruiterCore, error)
 	GetRecruiters() ([]RecruiterCore, error)
+	GetRecruiterById(data RecruiterCore) (RecruiterCore, error)
 }
