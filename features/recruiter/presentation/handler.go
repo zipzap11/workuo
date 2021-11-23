@@ -22,21 +22,15 @@ func (rh *RecruiterHandler) RegisterRecruiterHandler(e echo.Context) error {
 
 	err := e.Bind(&reqData)
 	if err != nil {
-		return e.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": err.Error(),
-		})
+		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
 	}
 
 	err = rh.recruiterService.RegisterRecruiter(request.FromRecruiterRequest(reqData))
 	if err != nil {
-		return e.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": err.Error(),
-		})
+		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
 	}
 
-	return e.JSON(http.StatusOK, map[string]interface{}{
-		"message": "Success",
-	})
+	return response.NewSuccessResponse(e, "success", nil)
 }
 
 func (rp *RecruiterHandler) LoginRecruiterHandler(e echo.Context) error {
@@ -44,30 +38,21 @@ func (rp *RecruiterHandler) LoginRecruiterHandler(e echo.Context) error {
 
 	err := e.Bind(&recruiterLogin)
 	if err != nil {
-		return e.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": err.Error(),
-		})
+		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
 	}
 
 	data, err := rp.recruiterService.LoginRecruiter(request.FromRecruiterLogin(recruiterLogin))
 	if err != nil {
-		return e.JSON(http.StatusForbidden, map[string]interface{}{
-			"message": err.Error(),
-		})
+		return response.NewErrorResponse(e, err.Error(), http.StatusForbidden)
 	}
 
-	return e.JSON(http.StatusOK, map[string]interface{}{
-		"message": "successs",
-		"data":    response.ToRecruiterLoginResponse(data),
-	})
+	return response.NewSuccessResponse(e, "success", response.ToRecruiterLoginResponse(data))
 }
 
 func (rh *RecruiterHandler) GetRecruitersHandler(e echo.Context) error {
 	data, err := rh.recruiterService.GetRecruiters()
 	if err != nil {
-		return e.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": err.Error(),
-		})
+		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
 	}
 
 	return response.NewSuccessResponse(e, "success", response.ToRecruiterResponseList(data))

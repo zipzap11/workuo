@@ -33,6 +33,12 @@ func NewSuccessResponse(e echo.Context, msg string, data interface{}) error {
 	})
 }
 
+func NewErrorResponse(e echo.Context, msg string, code int) error {
+	return e.JSON(code, Response{
+		Message: msg,
+	})
+}
+
 func ToRecruiterLoginResponse(data recruiter.RecruiterCore) RecruiterLoginResponse {
 	return RecruiterLoginResponse{
 		ID:      data.ID,
