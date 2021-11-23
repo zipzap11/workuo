@@ -2,6 +2,7 @@ package data
 
 import (
 	"errors"
+	"fmt"
 	"workuo/features/user"
 
 	"gorm.io/gorm"
@@ -17,7 +18,7 @@ func NewMysqlUserRepository(DB *gorm.DB) user.Repository {
 
 func (mr *mysqlUserRepository) InsertData(data user.UserCore) error {
 	recordData := toUserRecord(data)
-	err := mr.DB.Create(&recordData)
+	err := mr.DB.FirstOrCreate(&recordData)
 	if err != nil {
 		return err.Error
 	}
@@ -57,9 +58,31 @@ func (mr *mysqlUserRepository) GetData(data user.UserCore) ([]user.UserCore, err
 	var users []User
 
 	titleFilter := "%" + data.Title + "%"
-	err := mr.DB.Where("title LIKE ?", titleFilter).Preload("Skillsets").Preload("Experiences").
-		Joins("JOIN user_skillsets ON user_skillsets.user_id = users.id JOIN skillsets ON skillsets.id = user_skillsets.skillset_id AND skillsets.name LIKE ?", ("%" + data.Skillsets[0].Name + "%")).
+	// if len(data.Skillsets) == 0 {
+	// 	data.Skillsets = append(data.Skillsets, user.SkillsetCore{Name: ""})
+	// }
+
+	// skillsetFilter := ""
+	// for i, skill := range data.Skillsets {
+	// 	if i == 0 {
+	// 		skillsetFilter += " AND skillsets.name "
+	// 	}
+	// 	if i == len(data.Skillsets)-1 {
+	// 		skillsetFilter += "LIKE '%" + skill.Name + "%'"
+	// 		break
+	// 	}
+	// 	skillsetFilter += "LIKE " + "'%" + skill.Name + "%' " + "OR skillsets.name "
+	// }
+	skillsetFilter := " AND skillsets.name in ('dart', 'go')"
+	fmt.Println("skillsetFilter ==================", skillsetFilter)
+
+	err := mr.DB.Debug().Where("title LIKE ?", titleFilter).Preload("Skillsets").Preload("Experiences").
+		Joins("inner JOIN user_skillsets ON user_skillsets.user_id = users.id inner JOIN skillsets ON skillsets.id = user_skillsets.skillset_id" + skillsetFilter).
 		Find(&users).Error
+	// Joins("JOIN user_skillsets ON user_skillsets.user_id = users.id JOIN skillsets ON skillsets.id = user_skillsets.skillset_id AND skillsets.name LIKE ?", ("%" + data.Skillsets[0].Name + "%")).
+	// err := mr.DB.Where("title LIKE ?", titleFilter).Preload("Skillsets").Preload("Experiences").
+	// 	Joins("JOIN user_skillsets ON user_skillsets.user_id = users.id JOIN skillsets ON skillsets.id = user_skillsets.skillset_id AND skillsets.name IN " + skillsetFilter).
+	// 	Find(&users).Error
 	if err != nil {
 		return nil, err
 	}
