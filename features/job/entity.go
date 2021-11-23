@@ -23,7 +23,7 @@ type RequirementCore struct {
 type Service interface {
 	CreateJobPost(data JobCore) (err error)
 	GetJobPost(data JobCore) ([]JobCore, error)
-	GetJobById(data JobCore) (JobCore, error)
+	GetJobPostById(data JobCore) (JobCore, error)
 	// UpdateJobPost(data JobCore) (resp JobCore, err error)
 	// DeleteJobPost(id int) (err error)
 	// GetJobPostByTitle(title string) (resp []JobCore, err error)
