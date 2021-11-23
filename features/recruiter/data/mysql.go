@@ -1,6 +1,7 @@
 package data
 
 import (
+	"errors"
 	"workuo/features/recruiter"
 
 	"gorm.io/gorm"
@@ -22,4 +23,19 @@ func (rp *RecruiterRepository) CreateRecruiter(data recruiter.RecruiterCore) err
 	}
 
 	return nil
+}
+
+func (rp *RecruiterRepository) CheckRecruiter(data recruiter.RecruiterCore) (recruiter.RecruiterCore, error) {
+	var recruiterData Recruiter
+
+	err := rp.DB.Where("email = ? and password = ?", data.Email, data.Password).First(&recruiterData).Error
+	if err != nil {
+		return recruiter.RecruiterCore{}, err
+	}
+
+	if recruiterData.ID == 0 && recruiterData.Email == "" {
+		return recruiter.RecruiterCore{}, errors.New("no existing recruiter")
+	}
+
+	return ToCore(recruiterData), nil
 }

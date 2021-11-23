@@ -2,6 +2,7 @@ package service
 
 import (
 	"workuo/features/recruiter"
+	"workuo/middleware"
 )
 
 type recruiterService struct {
@@ -19,4 +20,18 @@ func (rs *recruiterService) RegisterRecruiter(data recruiter.RecruiterCore) erro
 	}
 
 	return nil
+}
+
+func (rs *recruiterService) LoginRecruiter(data recruiter.RecruiterCore) (recruiter.RecruiterCore, error) {
+	data, err := rs.recruiterRepository.CheckRecruiter(data)
+	if err != nil {
+		return recruiter.RecruiterCore{}, err
+	}
+
+	data.Token, err = middleware.CreateToken(data.ID, data.Company)
+	if err != nil {
+		return recruiter.RecruiterCore{}, err
+	}
+
+	return data, nil
 }
