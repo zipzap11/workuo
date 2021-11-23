@@ -40,13 +40,26 @@ func toRecordJob(data job.JobCore) Job {
 }
 
 func (j *Job) toCore() job.JobCore {
+	convertedRequirement := []job.RequirementCore{}
+	for _, req := range j.Requirements {
+		convertedRequirement = append(convertedRequirement, req.toCore())
+	}
 	return job.JobCore{
-		ID:          int(j.ID),
-		Title:       j.Title,
-		Description: j.Description,
-		RecruiterId: j.RecruiterId,
-		Created_at:  j.CreatedAt,
-		Updated_at:  j.UpdatedAt,
+		ID:           int(j.ID),
+		Title:        j.Title,
+		Description:  j.Description,
+		RecruiterId:  j.RecruiterId,
+		Requirements: convertedRequirement,
+		Created_at:   j.CreatedAt,
+		Updated_at:   j.UpdatedAt,
+	}
+}
+
+func (r *Requirement) toCore() job.RequirementCore {
+	return job.RequirementCore{
+		ID:          r.ID,
+		JobId:       r.JobID,
+		Description: r.Description,
 	}
 }
 
