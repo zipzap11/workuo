@@ -61,3 +61,14 @@ func (rp *RecruiterHandler) LoginRecruiterHandler(e echo.Context) error {
 		"data":    response.ToRecruiterLoginResponse(data),
 	})
 }
+
+func (rh *RecruiterHandler) GetRecruitersHandler(e echo.Context) error {
+	data, err := rh.recruiterService.GetRecruiters()
+	if err != nil {
+		return e.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": err.Error(),
+		})
+	}
+
+	return response.NewSuccessResponse(e, "success", response.ToRecruiterResponseList(data))
+}
