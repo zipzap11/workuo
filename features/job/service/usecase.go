@@ -21,3 +21,13 @@ func (ju *jobUseCase) CreateJobPost(data job.JobCore) error {
 
 	return nil
 }
+
+func (ju *jobUseCase) GetJobPost(data job.JobCore) ([]job.JobCore, error) {
+	jobData, err := ju.jobRepository.GetJobData(data)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return jobData, nil
+}
