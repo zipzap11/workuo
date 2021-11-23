@@ -26,7 +26,7 @@ func (jr *mysqlJobRepository) InsertData(data job.JobCore) error {
 
 func (jr *mysqlJobRepository) GetJobData(data job.JobCore) ([]job.JobCore, error) {
 	var jobs []Job
-	err := jr.DB.Preload("Requirements").Find(&jobs).Error
+	err := jr.DB.Joins("JOIN recruiters ON jobs.recruiter_id = recruiters.id and company = ? and title like ?", data.Company, "%"+data.Title+"%").Preload("Requirements").Find(&jobs).Error
 	if err != nil {
 		return nil, err
 	}

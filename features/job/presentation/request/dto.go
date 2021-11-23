@@ -9,6 +9,11 @@ type Job struct {
 	Requirements []string `json: "requirements"`
 }
 
+type JobFilter struct {
+	Title   string `json: "title"`
+	Company string `json: "company"`
+}
+
 func (j *Job) ToCore() job.JobCore {
 	convertedRequirement := []job.RequirementCore{}
 	for _, req := range j.Requirements {
@@ -22,5 +27,12 @@ func (j *Job) ToCore() job.JobCore {
 		RecruiterId:  j.RecruiterId,
 		Description:  j.Description,
 		Requirements: convertedRequirement,
+	}
+}
+
+func (jf *JobFilter) ToCore() job.JobCore {
+	return job.JobCore{
+		Title:   jf.Title,
+		Company: jf.Company,
 	}
 }

@@ -42,9 +42,13 @@ func (jh *JobHandler) CreateJobPostHandler(e echo.Context) error {
 }
 
 func (jh *JobHandler) GetJobPostHandler(e echo.Context) error {
-	reqData := job.JobCore{}
+	var reqData request.JobFilter
+	err := e.Bind(&reqData)
+	if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
+	}
 
-	data, err := jh.jobService.GetJobPost(reqData)
+	data, err := jh.jobService.GetJobPost(reqData.ToCore())
 	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
 	}

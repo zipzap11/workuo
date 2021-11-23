@@ -9,6 +9,7 @@ type JobCore struct {
 	Title        string
 	Description  string
 	RecruiterId  int
+	Company      string
 	Requirements []RequirementCore
 	Created_at   time.Time
 	Updated_at   time.Time
