@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"workuo/features/job"
 	"workuo/features/job/presentation/request"
+	"workuo/features/job/presentation/response"
 
 	"github.com/labstack/echo/v4"
 )
@@ -37,4 +38,15 @@ func (jh *JobHandler) CreateJobPostHandler(e echo.Context) error {
 	return e.JSON(http.StatusOK, map[string]interface{}{
 		"message": "Success",
 	})
+}
+
+func (jh *JobHandler) GetJobPostHandler(e echo.Context) error {
+	reqData := job.JobCore{}
+
+	data, err := jh.jobService.GetJobPost(reqData)
+	if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
+	}
+
+	return response.NewSuccessResponse(e, "success", response.ToJobResponseList(data))
 }
