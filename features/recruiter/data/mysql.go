@@ -39,3 +39,14 @@ func (rp *RecruiterRepository) CheckRecruiter(data recruiter.RecruiterCore) (rec
 
 	return ToCore(recruiterData), nil
 }
+
+func (rp *RecruiterRepository) GetRecruiters() ([]recruiter.RecruiterCore, error) {
+	var recruiters []Recruiter
+
+	err := rp.DB.Find(&recruiters).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return ToCoreList(recruiters), nil
+}
