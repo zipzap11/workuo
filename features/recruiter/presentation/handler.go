@@ -2,6 +2,7 @@ package presentation
 
 import (
 	"net/http"
+	"strconv"
 	"workuo/features/recruiter"
 	"workuo/features/recruiter/presentation/request"
 	"workuo/features/recruiter/presentation/response"
@@ -56,4 +57,18 @@ func (rh *RecruiterHandler) GetRecruitersHandler(e echo.Context) error {
 	}
 
 	return response.NewSuccessResponse(e, "success", response.ToRecruiterResponseList(data))
+}
+
+func (rh *RecruiterHandler) GetRecruiterByIdHandler(e echo.Context) error {
+	id, err := strconv.Atoi(e.Param("id"))
+	if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
+	}
+
+	data, err := rh.recruiterService.GetRecruiterById(recruiter.RecruiterCore{ID: uint(id)})
+	if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
+	}
+
+	return response.NewSuccessResponse(e, "success", response.ToRecruiterResponse(data))
 }
