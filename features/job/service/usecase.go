@@ -31,3 +31,13 @@ func (ju *jobUseCase) GetJobPost(data job.JobCore) ([]job.JobCore, error) {
 
 	return jobData, nil
 }
+
+func (ju *jobUseCase) GetJobPostById(data job.JobCore) (job.JobCore, error) {
+	jobData, err := ju.jobRepository.GetJobDataById(data)
+
+	if err != nil {
+		return job.JobCore{}, err
+	}
+
+	return jobData, nil
+}
