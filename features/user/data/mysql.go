@@ -2,7 +2,6 @@ package data
 
 import (
 	"errors"
-	"fmt"
 	"workuo/features/user"
 
 	"gorm.io/gorm"
@@ -58,31 +57,24 @@ func (mr *mysqlUserRepository) GetData(data user.UserCore) ([]user.UserCore, err
 	var users []User
 
 	titleFilter := "%" + data.Title + "%"
-	// if len(data.Skillsets) == 0 {
-	// 	data.Skillsets = append(data.Skillsets, user.SkillsetCore{Name: ""})
-	// }
 
-	// skillsetFilter := ""
-	// for i, skill := range data.Skillsets {
-	// 	if i == 0 {
-	// 		skillsetFilter += " AND skillsets.name "
-	// 	}
-	// 	if i == len(data.Skillsets)-1 {
-	// 		skillsetFilter += "LIKE '%" + skill.Name + "%'"
-	// 		break
-	// 	}
-	// 	skillsetFilter += "LIKE " + "'%" + skill.Name + "%' " + "OR skillsets.name "
-	// }
-	skillsetFilter := " AND skillsets.name in ('dart', 'go')"
-	fmt.Println("skillsetFilter ==================", skillsetFilter)
+	var skillsetFilter string
+	for i, skill := range data.Skillsets {
+		if i == 0 {
+			skillsetFilter = " AND skillsets.name in ("
+		}
+		if i == len(data.Skillsets)-1 {
+			skillsetFilter += "'" + skill.Name + "')"
+			break
+		}
+		skillsetFilter += "'" + skill.Name + "',"
+	}
 
-	err := mr.DB.Debug().Where("title LIKE ?", titleFilter).Preload("Skillsets").Preload("Experiences").
+	err := mr.DB.Debug().Distinct("users.id", "users.name", "users.dob", "users.gender", "users.address", "users.title", "users.bio").
+		Where("title LIKE ?", titleFilter).Preload("Skillsets").Preload("Experiences").
 		Joins("inner JOIN user_skillsets ON user_skillsets.user_id = users.id inner JOIN skillsets ON skillsets.id = user_skillsets.skillset_id" + skillsetFilter).
 		Find(&users).Error
-	// Joins("JOIN user_skillsets ON user_skillsets.user_id = users.id JOIN skillsets ON skillsets.id = user_skillsets.skillset_id AND skillsets.name LIKE ?", ("%" + data.Skillsets[0].Name + "%")).
-	// err := mr.DB.Where("title LIKE ?", titleFilter).Preload("Skillsets").Preload("Experiences").
-	// 	Joins("JOIN user_skillsets ON user_skillsets.user_id = users.id JOIN skillsets ON skillsets.id = user_skillsets.skillset_id AND skillsets.name IN " + skillsetFilter).
-	// 	Find(&users).Error
+
 	if err != nil {
 		return nil, err
 	}
