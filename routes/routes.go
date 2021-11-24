@@ -14,6 +14,7 @@ func New() *echo.Echo {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
+
 	// job
 	e.POST("/jobs", presenter.JobPresentation.CreateJobPostHandler)
 	e.GET("/jobs", presenter.JobPresentation.GetJobPostHandler)
@@ -33,6 +34,6 @@ func New() *echo.Echo {
 
 	// application
 	e.POST("/applications", presenter.ApplicationPresentation.ApplyJobHandler)
-
+	e.PUT("/applications/reject", presenter.ApplicationPresentation.RejectApplicationHandler)
 	return e
 }
