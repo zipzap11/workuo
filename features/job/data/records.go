@@ -15,7 +15,7 @@ type Job struct {
 }
 
 type Requirement struct {
-	ID          uint `gorm: "primaryKey"`
+	gorm.Model
 	JobID       uint
 	Description string
 }
