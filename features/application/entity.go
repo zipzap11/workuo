@@ -12,8 +12,10 @@ type ApplicationCore struct {
 
 type Repository interface {
 	ApplyJob(ApplicationCore) error
+	AcceptApplication(int) error
 }
 
 type Service interface {
 	ApplyJob(ApplicationCore) error
+	AcceptApplication(int) error
 }
