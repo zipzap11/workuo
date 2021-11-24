@@ -68,3 +68,17 @@ func (jh *JobHandler) GetJobPostByIdHandler(e echo.Context) error {
 
 	return response.NewSuccessResponse(e, "success", response.ToJobResponse(data))
 }
+
+func (jh *JobHandler) DeleteJobPostHandler(e echo.Context) error {
+	id, err := strconv.Atoi(e.Param("id"))
+	if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
+	}
+
+	err = jh.jobService.DeleteJobPost(job.JobCore{ID: id})
+	if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
+	}
+
+	return response.NewSuccessResponse(e, "success", nil)
+}
