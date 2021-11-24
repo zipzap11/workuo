@@ -41,3 +41,13 @@ func (ju *jobUseCase) GetJobPostById(data job.JobCore) (job.JobCore, error) {
 
 	return jobData, nil
 }
+
+func (ju *jobUseCase) DeleteJobPost(data job.JobCore) error {
+	err := ju.jobRepository.DeleteJobData(data)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
