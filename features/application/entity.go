@@ -1,6 +1,8 @@
 package application
 
-import "time"
+import (
+	"time"
+)
 
 type ApplicationCore struct {
 	ID        uint
@@ -12,8 +14,10 @@ type ApplicationCore struct {
 
 type Repository interface {
 	ApplyJob(ApplicationCore) error
+	GetApplicationByUserID(int) ([]ApplicationCore, error)
 }
 
 type Service interface {
 	ApplyJob(ApplicationCore) error
+	GetApplicationByUserID(int) ([]ApplicationCore, error)
 }
