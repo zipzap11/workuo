@@ -33,6 +33,6 @@ func New() *echo.Echo {
 
 	// application
 	e.POST("/applications", presenter.ApplicationPresentation.ApplyJobHandler)
-
+	e.GET("/applications/users", presenter.ApplicationPresentation.GetApplicationByUserIdHandler)
 	return e
 }
