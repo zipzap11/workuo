@@ -69,6 +69,21 @@ func (jh *JobHandler) GetJobPostByIdHandler(e echo.Context) error {
 	return response.NewSuccessResponse(e, "success", response.ToJobResponse(data))
 }
 
+
+func (jh *JobHandler) DeleteJobPostHandler(e echo.Context) error {
+	id, err := strconv.Atoi(e.Param("id"))
+  if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
+	}
+  
+  err = jh.jobService.DeleteJobPost(job.JobCore{ID: id})
+  if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
+	}
+  
+  return response.NewSuccessResponse(e, "success", nil)
+}
+
 func (jh *JobHandler) UpdateJobPostHandler(e echo.Context) error {
 	payloadData := request.JobUpdate{}
 
@@ -76,8 +91,8 @@ func (jh *JobHandler) UpdateJobPostHandler(e echo.Context) error {
 	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
 	}
-
-	err = jh.jobService.UpdateJobPost(payloadData.ToCore())
+  
+  err = jh.jobService.UpdateJobPost(payloadData.ToCore())
 	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
 	}

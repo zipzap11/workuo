@@ -45,6 +45,18 @@ func (jr *mysqlJobRepository) GetJobDataById(data job.JobCore) (job.JobCore, err
 	return jobData.toCore(), nil
 }
 
+
+func (jr *mysqlJobRepository) DeleteJobData(data job.JobCore) error {
+	err := jr.DB.Debug().Delete(&Job{}, data.ID).Error
+	if err != nil {
+		return err
+	}
+
+	err = jr.DB.Debug().Where("job_id = ?", data.ID).Delete(&Requirement{}).Error
+	if err != nil {
+		return err
+	}
+
 func (jr *mysqlJobRepository) UpdateJobData(data job.JobCore) error {
 	jobData, requirements := SeparateJobRequirement(toRecordJob(data))
 
