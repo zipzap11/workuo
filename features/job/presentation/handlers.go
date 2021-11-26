@@ -61,7 +61,7 @@ func (jh *JobHandler) GetJobPostByIdHandler(e echo.Context) error {
 	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
 	}
-	data, err := jh.jobService.GetJobPostById(job.JobCore{ID: id})
+	data, err := jh.jobService.GetJobPostById(id)
 	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
 	}
