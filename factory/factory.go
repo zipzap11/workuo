@@ -16,12 +16,18 @@ import (
 	recruiterData "workuo/features/recruiter/data"
 	recruiterPresent "workuo/features/recruiter/presentation"
 	recruiterService "workuo/features/recruiter/service"
+
+	// recruiter domain
+	invitationData "workuo/features/invitation/data"
+	invitationPresent "workuo/features/invitation/presentation"
+	invitationService "workuo/features/invitation/service"
 )
 
 type jobPresenter struct {
-	JobPresentation       jobPresent.JobHandler
-	UserPresentation      userPresent.UserHandler
-	RecruiterPresentation recruiterPresent.RecruiterHandler
+	JobPresentation        jobPresent.JobHandler
+	UserPresentation       userPresent.UserHandler
+	RecruiterPresentation  recruiterPresent.RecruiterHandler
+	InvitationPresentation invitationPresent.InvitationHandler
 }
 
 func Init() jobPresenter {
@@ -37,9 +43,14 @@ func Init() jobPresenter {
 	recruiterData := recruiterData.NewRecruiterRepository(driver.DB)
 	recruiterService := recruiterService.NewRecruiterService(recruiterData)
 
+	// invitation layer
+	invData := invitationData.NewInvitationRepository(driver.DB)
+	invService := invitationService.NewInvitationService(invData)
+
 	return jobPresenter{
-		JobPresentation:       *jobPresent.NewJobHandler(jobService),
-		UserPresentation:      *userPresent.NewUserHandler(userService),
-		RecruiterPresentation: *recruiterPresent.NewRecruiterHandler(recruiterService),
+		JobPresentation:        *jobPresent.NewJobHandler(jobService),
+		UserPresentation:       *userPresent.NewUserHandler(userService),
+		RecruiterPresentation:  *recruiterPresent.NewRecruiterHandler(recruiterService),
+		InvitationPresentation: *invitationPresent.NewInvitationHandler(invService),
 	}
 }
