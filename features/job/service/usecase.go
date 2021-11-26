@@ -32,8 +32,8 @@ func (ju *jobUseCase) GetJobPost(data job.JobCore) ([]job.JobCore, error) {
 	return jobData, nil
 }
 
-func (ju *jobUseCase) GetJobPostById(data job.JobCore) (job.JobCore, error) {
-	jobData, err := ju.jobRepository.GetJobDataById(data)
+func (ju *jobUseCase) GetJobPostById(id int) (job.JobCore, error) {
+	jobData, err := ju.jobRepository.GetJobDataById(id)
 
 	if err != nil {
 		return job.JobCore{}, err
