@@ -18,6 +18,7 @@ func New() *echo.Echo {
 	e.POST("/jobs", presenter.JobPresentation.CreateJobPostHandler)
 	e.GET("/jobs", presenter.JobPresentation.GetJobPostHandler)
 	e.GET("/jobs/:id", presenter.JobPresentation.GetJobPostByIdHandler)
+	e.PUT("/jobs", presenter.JobPresentation.UpdateJobPostHandler)
 
 	// user
 	e.GET("/users", presenter.UserPresentation.GetUsersHandler)

@@ -68,3 +68,19 @@ func (jh *JobHandler) GetJobPostByIdHandler(e echo.Context) error {
 
 	return response.NewSuccessResponse(e, "success", response.ToJobResponse(data))
 }
+
+func (jh *JobHandler) UpdateJobPostHandler(e echo.Context) error {
+	payloadData := request.JobUpdate{}
+
+	err := e.Bind(&payloadData)
+	if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
+	}
+
+	err = jh.jobService.UpdateJobPost(payloadData.ToCore())
+	if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
+	}
+
+	return response.NewSuccessResponse(e, "success", nil)
+}
