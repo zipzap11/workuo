@@ -31,5 +31,8 @@ func New() *echo.Echo {
 	e.GET("/recruiters", presenter.RecruiterPresentation.GetRecruitersHandler)
 	e.GET("/recruiters/:id", presenter.RecruiterPresentation.GetRecruiterByIdHandler)
 
+	// invitation
+	e.POST("/invitations", presenter.InvitationPresentation.InviteUserHandler)
+
 	return e
 }
