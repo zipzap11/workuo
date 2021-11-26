@@ -8,7 +8,9 @@ type InvitationCore struct {
 }
 
 type Service interface {
+	InviteUser(InvitationCore) error
 }
 
 type Repository interface {
+	InviteUser(InvitationCore) error
 }
