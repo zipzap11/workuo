@@ -5,6 +5,7 @@ type InvitationCore struct {
 	RecruiterID uint
 	UserID      uint
 	JobID       uint
+	Role        string
 }
 
 type Service interface {
