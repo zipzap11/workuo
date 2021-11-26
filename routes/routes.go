@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"workuo/config"
 	"workuo/factory"
 
 	"github.com/labstack/echo/v4"
@@ -11,6 +12,8 @@ func New() *echo.Echo {
 	presenter := factory.Init()
 
 	e := echo.New()
+	jwt := e.Group("")
+	jwt.Use(middleware.JWT([]byte(config.JWT_KEY)))
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
@@ -32,7 +35,7 @@ func New() *echo.Echo {
 	e.GET("/recruiters/:id", presenter.RecruiterPresentation.GetRecruiterByIdHandler)
 
 	// invitation
-	e.POST("/invitations", presenter.InvitationPresentation.InviteUserHandler)
+	jwt.POST("/invitations", presenter.InvitationPresentation.InviteUserHandler)
 
 	return e
 }
