@@ -1,6 +1,7 @@
 package data
 
 import (
+	"errors"
 	"workuo/features/application"
 
 	"gorm.io/gorm"
@@ -51,4 +52,17 @@ func (ar *mysqlAppRepository) AcceptApplication(id int) error {
 	}
 
 	return nil
+}
+
+func (ar *mysqlAppRepository) GetApplicationByID(id int) (application.ApplicationCore, error) {
+	var data Application
+	err := ar.DB.Joins("Job").First(&data, id).Error
+	if err != nil {
+		return application.ApplicationCore{}, err
+	}
+	if data.ID == 0 {
+		return application.ApplicationCore{}, errors.New("application doesn't exist")
+	}
+
+	return ToCore(data), nil
 }
