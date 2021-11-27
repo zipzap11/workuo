@@ -76,7 +76,7 @@ func ToUserResponse(user user.UserCore) UserResponse {
 		Id:          user.Id,
 		Name:        user.Name,
 		Dob:         user.Dob,
-		Gender:      user.Address,
+		Gender:      user.Gender,
 		Address:     user.Address,
 		Title:       user.Title,
 		Bio:         user.Bio,
