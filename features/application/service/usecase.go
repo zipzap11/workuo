@@ -5,20 +5,48 @@ import (
 	"fmt"
 	"time"
 	"workuo/features/application"
+	"workuo/features/job"
 )
 
 type appService struct {
 	appRepository application.Repository
+	jobService    job.Service
 }
 
-func NewAppService(ar application.Repository) application.Service {
-	return &appService{ar}
+func NewAppService(ar application.Repository, js job.Service) application.Service {
+	return &appService{
+		appRepository: ar,
+		jobService:    js,
+	}
 }
 
 func (ar *appService) ApplyJob(data application.ApplicationCore) error {
+	jobData, err := ar.jobService.GetJobPostById(int(data.JobID))
+	if err != nil {
+		return err
+	}
+	if jobData.ID == 0 {
+		msg := fmt.Sprintf("job with id %v not found", data.JobID)
+		return errors.New(msg)
+	}
+
+	appData, err := ar.appRepository.GetApplicationMultiParam(int(data.JobID), int(data.UserID))
+	if err != nil {
+		return err
+	}
+	if appData.ID != 0 {
+		msg := fmt.Sprintf("user with id %v had applied job with id %v, current status = %v",
+			appData.ID,
+			appData.JobID,
+			appData.Status,
+		)
+		return errors.New(msg)
+	}
+
 	data.Status = "pending"
 	data.AppliedAt = time.Now()
-	err := ar.appRepository.ApplyJob(data)
+
+	err = ar.appRepository.ApplyJob(data)
 	if err != nil {
 		return err
 	}
