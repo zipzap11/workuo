@@ -1,8 +1,8 @@
 package driver
 
 import (
-	InvitationModel "workuo/features/invitation/data"
 	AppModel "workuo/features/application/data"
+	InvitationModel "workuo/features/invitation/data"
 	JobModel "workuo/features/job/data"
 	RecruiterModel "workuo/features/recruiter/data"
 	UserModel "workuo/features/user/data"

@@ -34,31 +34,31 @@ func (ah *AppHandler) ApplyJobHandler(e echo.Context) error {
 }
 
 func (ah *AppHandler) GetApplicationByUserIdHandler(e echo.Context) error {
-	id, err := strconv.Atoi(e.QueryParam("user-id"))
+	id, err := strconv.Atoi(e.Param("id"))
 	if err != nil {
 		return response.NewSuccessResponse(e, err.Error(), http.StatusBadRequest)
 	}
 
 	applications, err := ah.appService.GetApplicationByUserID(id)
-  if err != nil {
+	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
 	}
-  
-  return response.NewSuccessResponse(e, "success", applications)
+
+	return response.NewSuccessResponse(e, "success", applications)
 }
 
 func (ah *AppHandler) RejectApplicationHandler(e echo.Context) error {
-  id, err := strconv.Atoi(e.QueryParam("id"))
+	id, err := strconv.Atoi(e.QueryParam("id"))
 	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
 	}
-  
-  err = ah.appService.RejectApplication(id)
-  if err != nil {
+
+	err = ah.appService.RejectApplication(id)
+	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
 	}
-  
-  return response.NewSuccessResponse(e, "success", nil)
+
+	return response.NewSuccessResponse(e, "success", nil)
 }
 
 func (ah *AppHandler) AcceptApplication(e echo.Context) error {
@@ -66,7 +66,7 @@ func (ah *AppHandler) AcceptApplication(e echo.Context) error {
 	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
 	}
-  
+
 	err = ah.appService.AcceptApplication(id)
 	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)

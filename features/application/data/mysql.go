@@ -27,8 +27,7 @@ func (ar *mysqlAppRepository) ApplyJob(data application.ApplicationCore) error {
 
 func (ar *mysqlAppRepository) GetApplicationByUserID(id int) ([]application.ApplicationCore, error) {
 	var applications []Application
-	err := ar.DB.Where("user_id = ?", id).Find(&applications).Error
-
+	err := ar.DB.Debug().Where("user_id = ?", id).Joins("Job").Preload("Job.Requirements").Find(&applications).Error
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +37,7 @@ func (ar *mysqlAppRepository) GetApplicationByUserID(id int) ([]application.Appl
 
 func (ar *mysqlAppRepository) RejectApplication(id int) error {
 	err := ar.DB.Model(&Application{}).Where("id = ?", id).Update("status", "rejected").Error
-  if err != nil {
+	if err != nil {
 		return err
 	}
 
@@ -53,4 +52,3 @@ func (ar *mysqlAppRepository) AcceptApplication(id int) error {
 
 	return nil
 }
-
