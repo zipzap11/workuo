@@ -64,12 +64,13 @@ func (ah *AppHandler) RejectApplicationHandler(e echo.Context) error {
 
 func (ah *AppHandler) AcceptApplication(e echo.Context) error {
 	id, err := strconv.Atoi(e.QueryParam("id"))
+
 	claims := middleware.ExtractClaim(e)
 	role := claims["role"]
-	recruiterId := uint(claims["userId"].(float64))
+	recruiterId := uint(claims["id"].(float64))
 
 	if role != "recruiter" {
-		return response.NewErrorResponse(e, "user cannot accept application", http.StatusForbidden)
+		return response.NewErrorResponse(e, "user not allowed to accept application", http.StatusForbidden)
 	}
 	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
