@@ -74,3 +74,17 @@ func (ah *AppHandler) AcceptApplication(e echo.Context) error {
 
 	return response.NewSuccessResponse(e, "success", nil)
 }
+
+func (ah *AppHandler) GetApplicationByIDHandler(e echo.Context) error {
+	id, err := strconv.Atoi(e.Param("id"))
+	if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
+	}
+
+	appCore, err := ah.appService.GetApplicationByID(id)
+	if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
+	}
+
+	return response.NewSuccessResponse(e, "success", response.ToApplicationResponse(appCore))
+}
