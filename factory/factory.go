@@ -17,17 +17,24 @@ import (
 	recruiterPresent "workuo/features/recruiter/presentation"
 	recruiterService "workuo/features/recruiter/service"
 
-	// recruiter domain
+	// application domain
+	applicationData "workuo/features/application/data"
+	applicationPresent "workuo/features/application/presentation"
+	applicationService "workuo/features/application/service"
+)
+
+	// invitation domain
 	invitationData "workuo/features/invitation/data"
 	invitationPresent "workuo/features/invitation/presentation"
 	invitationService "workuo/features/invitation/service"
 )
 
 type jobPresenter struct {
-	JobPresentation        jobPresent.JobHandler
-	UserPresentation       userPresent.UserHandler
-	RecruiterPresentation  recruiterPresent.RecruiterHandler
-	InvitationPresentation invitationPresent.InvitationHandler
+	JobPresentation         jobPresent.JobHandler
+	UserPresentation        userPresent.UserHandler
+	RecruiterPresentation   recruiterPresent.RecruiterHandler
+	ApplicationPresentation applicationPresent.AppHandler
+  InvitationPresentation invitationPresent.InvitationHandler
 }
 
 func Init() jobPresenter {
@@ -43,14 +50,20 @@ func Init() jobPresenter {
 	recruiterData := recruiterData.NewRecruiterRepository(driver.DB)
 	recruiterService := recruiterService.NewRecruiterService(recruiterData)
 
-	// invitation layer
+	// application layer
+	appData := applicationData.NewMysqlAppRepository(driver.DB)
+	appService := applicationService.NewAppService(appData)
+  
+  // invitation layer
 	invData := invitationData.NewInvitationRepository(driver.DB)
 	invService := invitationService.NewInvitationService(invData)
 
+
 	return jobPresenter{
-		JobPresentation:        *jobPresent.NewJobHandler(jobService),
-		UserPresentation:       *userPresent.NewUserHandler(userService),
-		RecruiterPresentation:  *recruiterPresent.NewRecruiterHandler(recruiterService),
-		InvitationPresentation: *invitationPresent.NewInvitationHandler(invService),
+		JobPresentation:         *jobPresent.NewJobHandler(jobService),
+		UserPresentation:        *userPresent.NewUserHandler(userService),
+		RecruiterPresentation:   *recruiterPresent.NewRecruiterHandler(recruiterService),
+		ApplicationPresentation: *applicationPresent.NewAppHandler(appService),
+    InvitationPresentation: *invitationPresent.NewInvitationHandler(invService),
 	}
 }

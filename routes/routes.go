@@ -33,5 +33,8 @@ func New() *echo.Echo {
 	e.GET("/recruiters", presenter.RecruiterPresentation.GetRecruitersHandler)
 	e.GET("/recruiters/:id", presenter.RecruiterPresentation.GetRecruiterByIdHandler)
 
+	// application
+	e.POST("/applications", presenter.ApplicationPresentation.ApplyJobHandler)
+
 	return e
 }
