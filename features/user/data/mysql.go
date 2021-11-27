@@ -39,9 +39,9 @@ func (mr *mysqlUserRepository) CheckUser(data user.UserCore) (user.UserCore, err
 	return toUserCore(userData), nil
 }
 
-func (mr *mysqlUserRepository) GetDataById(data user.UserCore) (user.UserCore, error) {
+func (mr *mysqlUserRepository) GetDataById(id int) (user.UserCore, error) {
 	var userData User
-	err := mr.DB.Preload("Skillsets").Preload("Experiences").First(&userData, data.Id).Error
+	err := mr.DB.Preload("Skillsets").Preload("Experiences").First(&userData, id).Error
 
 	if userData.Name == "" && userData.ID == 0 {
 		return user.UserCore{}, errors.New("no existing user")
