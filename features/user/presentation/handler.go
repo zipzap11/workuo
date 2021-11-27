@@ -92,7 +92,7 @@ func (uh *UserHandler) GetUserByIdHandler(e echo.Context) error {
 		})
 	}
 
-	data, err := uh.userService.GetUserById(user.UserCore{Id: uint(id)})
+	data, err := uh.userService.GetUserById(id)
 	if err != nil {
 		return e.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": err.Error(),

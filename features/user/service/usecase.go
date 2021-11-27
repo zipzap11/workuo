@@ -46,8 +46,8 @@ func (us *userService) LoginUser(data user.UserCore) (user.UserCore, error) {
 	return userData, nil
 }
 
-func (us *userService) GetUserById(data user.UserCore) (user.UserCore, error) {
-	userData, err := us.userRepository.GetDataById(data)
+func (us *userService) GetUserById(id int) (user.UserCore, error) {
+	userData, err := us.userRepository.GetDataById(id)
 
 	if err != nil {
 		return user.UserCore{}, err
