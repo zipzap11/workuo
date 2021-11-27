@@ -33,6 +33,7 @@ type RequirementCore struct {
 type Repository interface {
 	ApplyJob(ApplicationCore) error
 	GetApplicationByUserID(int) ([]ApplicationCore, error)
+	GetApplicationByID(int) (ApplicationCore, error)
 	RejectApplication(int) error
 	AcceptApplication(int) error
 }
@@ -40,6 +41,7 @@ type Repository interface {
 type Service interface {
 	ApplyJob(ApplicationCore) error
 	GetApplicationByUserID(int) ([]ApplicationCore, error)
+	GetApplicationByID(int) (ApplicationCore, error)
 	RejectApplication(int) error
 	AcceptApplication(int) error
 }
