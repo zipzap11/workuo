@@ -38,7 +38,7 @@ func (us *userService) LoginUser(data user.UserCore) (user.UserCore, error) {
 		return user.UserCore{}, err
 	}
 
-	userData.Token, err = middleware.CreateToken(userData.Id, userData.Name)
+	userData.Token, err = middleware.CreateToken(userData.Id, "user")
 	if err != nil {
 		return user.UserCore{}, err
 	}
