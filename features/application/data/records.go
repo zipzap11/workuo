@@ -13,6 +13,7 @@ type Application struct {
 	JobID     uint
 	Status    string
 	Job       Job
+	User      User
 	AppliedAt time.Time
 }
 
@@ -30,6 +31,16 @@ type Requirement struct {
 	Description string
 }
 
+type User struct {
+	gorm.Model
+	Name    string
+	Dob     time.Time
+	Gender  string
+	Address string
+	Title   string
+	Bio     string
+}
+
 func (j *Job) toCore() application.JobCore {
 	convertedRequirement := []application.RequirementCore{}
 	for _, req := range j.Requirements {
@@ -43,6 +54,18 @@ func (j *Job) toCore() application.JobCore {
 		Requirements: convertedRequirement,
 		Created_at:   j.CreatedAt,
 		Updated_at:   j.UpdatedAt,
+	}
+}
+
+func (u User) toCore() application.UserCore {
+	return application.UserCore{
+		ID:      u.ID,
+		Name:    u.Name,
+		Dob:     u.Dob,
+		Gender:  u.Gender,
+		Title:   u.Title,
+		Address: u.Address,
+		Bio:     u.Bio,
 	}
 }
 
@@ -80,6 +103,7 @@ func ToCore(data Application) application.ApplicationCore {
 		Status:    data.Status,
 		AppliedAt: data.AppliedAt,
 		Job:       data.Job.toCore(),
+		User:      data.User.toCore(),
 	}
 }
 

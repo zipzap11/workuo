@@ -66,3 +66,13 @@ func (ar *mysqlAppRepository) GetApplicationByID(id int) (application.Applicatio
 
 	return ToCore(data), nil
 }
+
+func (ar *mysqlAppRepository) GetApplicationByJobID(id int) ([]application.ApplicationCore, error) {
+	var applications []Application
+	err := ar.DB.Where("job_id = ?", id).Joins("User").Find(&applications).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return ToCoreList(applications), nil
+}

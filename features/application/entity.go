@@ -11,6 +11,7 @@ type ApplicationCore struct {
 	Status    string
 	AppliedAt time.Time
 	Job       JobCore
+	User      UserCore
 }
 
 type JobCore struct {
@@ -30,10 +31,21 @@ type RequirementCore struct {
 	Description string
 }
 
+type UserCore struct {
+	ID      uint
+	Name    string
+	Dob     time.Time
+	Gender  string
+	Address string
+	Title   string
+	Bio     string
+}
+
 type Repository interface {
 	ApplyJob(ApplicationCore) error
 	GetApplicationByUserID(int) ([]ApplicationCore, error)
 	GetApplicationByID(int) (ApplicationCore, error)
+	GetApplicationByJobID(int) ([]ApplicationCore, error)
 	RejectApplication(int) error
 	AcceptApplication(int) error
 }
@@ -42,6 +54,7 @@ type Service interface {
 	ApplyJob(ApplicationCore) error
 	GetApplicationByUserID(int) ([]ApplicationCore, error)
 	GetApplicationByID(int) (ApplicationCore, error)
+	GetApplicationByJobID(int) ([]ApplicationCore, error)
 	RejectApplication(int) error
 	AcceptApplication(int) error
 }
