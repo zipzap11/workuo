@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 	"workuo/features/application"
-	"workuo/features/application/presentation/request"
 	"workuo/features/application/presentation/response"
 	"workuo/middleware"
 
@@ -20,13 +19,22 @@ func NewAppHandler(as application.Service) *AppHandler {
 }
 
 func (ah *AppHandler) ApplyJobHandler(e echo.Context) error {
-	var reqPayload request.ApplicationRequest
-	err := e.Bind(&reqPayload)
+	jobId, err := strconv.Atoi(e.QueryParam("jobId"))
 	if err != nil {
 		return response.NewSuccessResponse(e, err.Error(), http.StatusBadRequest)
 	}
 
-	err = ah.appService.ApplyJob(reqPayload.ToCore())
+	claims := middleware.ExtractClaim(e)
+	role := claims["role"]
+	userId := uint(claims["id"].(float64))
+	if role != "user" {
+		return response.NewErrorResponse(e, "only user role can apply job", http.StatusForbidden)
+	}
+
+	err = ah.appService.ApplyJob(application.ApplicationCore{
+		JobID:  uint(jobId),
+		UserID: userId,
+	})
 	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
 	}
