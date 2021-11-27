@@ -59,3 +59,12 @@ func (ar *appService) GetApplicationByID(id int) (application.ApplicationCore, e
 
 	return data, nil
 }
+
+func (ar *appService) GetApplicationByJobID(id int) ([]application.ApplicationCore, error) {
+	data, err := ar.appRepository.GetApplicationByJobID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
