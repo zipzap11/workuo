@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"workuo/features/user"
 	"workuo/middleware"
 )
@@ -15,7 +14,6 @@ func NewUserService(userRepository user.Repository) user.Service {
 }
 
 func (us *userService) RegisterUser(data user.UserCore) error {
-	fmt.Println("data from service =====", data)
 	err := us.userRepository.InsertData(data)
 
 	if err != nil {
@@ -25,8 +23,8 @@ func (us *userService) RegisterUser(data user.UserCore) error {
 	return nil
 }
 
-func (us *userService) GetAllUser() ([]user.UserCore, error) {
-	users, err := us.userRepository.GetData()
+func (us *userService) GetUsers(data user.UserCore) ([]user.UserCore, error) {
+	users, err := us.userRepository.GetData(data)
 	if err != nil {
 		return nil, err
 	}

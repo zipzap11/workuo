@@ -1,7 +1,6 @@
 package presentation
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"workuo/features/user"
@@ -23,7 +22,6 @@ func (uh *UserHandler) RegisterUserHandler(e echo.Context) error {
 	userData := request.UserRequest{}
 
 	err := e.Bind(&userData)
-	fmt.Println("data in handler =====", userData)
 	if err != nil {
 		return e.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": err.Error(),
@@ -42,8 +40,19 @@ func (uh *UserHandler) RegisterUserHandler(e echo.Context) error {
 	})
 }
 
-func (uh *UserHandler) GetAllUserHandler(e echo.Context) error {
-	data, err := uh.userService.GetAllUser()
+func (uh *UserHandler) GetUsersHandler(e echo.Context) error {
+	var filter request.UserFilter
+	err := e.Bind(&filter)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": err.Error(),
+		})
+	}
+
+	data, err := uh.userService.GetUsers(user.UserCore{
+		Title:     filter.Title,
+		Skillsets: request.ToSkillsetsCore(filter.Skillsets),
+	})
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": err.Error(),

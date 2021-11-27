@@ -15,13 +15,14 @@ type Job struct {
 }
 
 type Requirement struct {
-	ID          uint `gorm: "primaryKey"`
+	gorm.Model
 	JobID       uint
 	Description string
 }
 
 func toRecordRequirement(req job.RequirementCore) Requirement {
 	return Requirement{
+		JobID:       req.JobId,
 		Description: req.Description,
 	}
 }
@@ -40,13 +41,26 @@ func toRecordJob(data job.JobCore) Job {
 }
 
 func (j *Job) toCore() job.JobCore {
+	convertedRequirement := []job.RequirementCore{}
+	for _, req := range j.Requirements {
+		convertedRequirement = append(convertedRequirement, req.toCore())
+	}
 	return job.JobCore{
-		ID:          int(j.ID),
-		Title:       j.Title,
-		Description: j.Description,
-		RecruiterId: j.RecruiterId,
-		Created_at:  j.CreatedAt,
-		Updated_at:  j.UpdatedAt,
+		ID:           int(j.ID),
+		Title:        j.Title,
+		Description:  j.Description,
+		RecruiterId:  j.RecruiterId,
+		Requirements: convertedRequirement,
+		Created_at:   j.CreatedAt,
+		Updated_at:   j.UpdatedAt,
+	}
+}
+
+func (r *Requirement) toCore() job.RequirementCore {
+	return job.RequirementCore{
+		ID:          r.ID,
+		JobId:       r.JobID,
+		Description: r.Description,
 	}
 }
 
@@ -57,4 +71,14 @@ func toCoreList(jobs []Job) []job.JobCore {
 	}
 
 	return convertedData
+}
+
+func SeparateJobRequirement(data Job) (Job, []Requirement) {
+	newJob := Job{
+		Title:       data.Title,
+		Description: data.Description,
+		RecruiterId: data.RecruiterId,
+	}
+	newRequirements := data.Requirements
+	return newJob, newRequirements
 }
