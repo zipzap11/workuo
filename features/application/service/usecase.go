@@ -47,10 +47,15 @@ func (ar *appService) RejectApplication(id int) error {
 func (ar *appService) AcceptApplication(id int, recruiterId int) error {
 	data, err := ar.appRepository.GetApplicationByID(id)
 	if err != nil {
-		return err
+		msg := fmt.Sprintf("application with id %v not found", id)
+		return errors.New(msg)
 	}
 	if data.Job.RecruiterId != recruiterId {
 		msg := fmt.Sprintf("recruiter with id %v not allowed to access post with id %v", recruiterId, id)
+		return errors.New(msg)
+	}
+	if data.Status != "pending" {
+		msg := fmt.Sprintf("this user has been %v", data.Status)
 		return errors.New(msg)
 	}
 
