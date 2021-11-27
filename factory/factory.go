@@ -21,7 +21,6 @@ import (
 	applicationData "workuo/features/application/data"
 	applicationPresent "workuo/features/application/presentation"
 	applicationService "workuo/features/application/service"
-)
 
 	// invitation domain
 	invitationData "workuo/features/invitation/data"
@@ -34,7 +33,7 @@ type jobPresenter struct {
 	UserPresentation        userPresent.UserHandler
 	RecruiterPresentation   recruiterPresent.RecruiterHandler
 	ApplicationPresentation applicationPresent.AppHandler
-  InvitationPresentation invitationPresent.InvitationHandler
+	InvitationPresentation  invitationPresent.InvitationHandler
 }
 
 func Init() jobPresenter {
@@ -53,17 +52,16 @@ func Init() jobPresenter {
 	// application layer
 	appData := applicationData.NewMysqlAppRepository(driver.DB)
 	appService := applicationService.NewAppService(appData)
-  
-  // invitation layer
+
+	// invitation layer
 	invData := invitationData.NewInvitationRepository(driver.DB)
 	invService := invitationService.NewInvitationService(invData, jobService)
-
 
 	return jobPresenter{
 		JobPresentation:         *jobPresent.NewJobHandler(jobService),
 		UserPresentation:        *userPresent.NewUserHandler(userService),
 		RecruiterPresentation:   *recruiterPresent.NewRecruiterHandler(recruiterService),
 		ApplicationPresentation: *applicationPresent.NewAppHandler(appService),
-    InvitationPresentation: *invitationPresent.NewInvitationHandler(invService),
+		InvitationPresentation:  *invitationPresent.NewInvitationHandler(invService),
 	}
 }

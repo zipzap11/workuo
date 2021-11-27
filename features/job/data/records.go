@@ -22,7 +22,6 @@ type Requirement struct {
 
 func toRecordRequirement(req job.RequirementCore) Requirement {
 	return Requirement{
-		ID:          req.ID,
 		JobID:       req.JobId,
 		Description: req.Description,
 	}
