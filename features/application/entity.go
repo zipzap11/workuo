@@ -56,5 +56,5 @@ type Service interface {
 	GetApplicationByID(int) (ApplicationCore, error)
 	GetApplicationByJobID(int) ([]ApplicationCore, error)
 	RejectApplication(int) error
-	AcceptApplication(int) error
+	AcceptApplication(int, int) error
 }

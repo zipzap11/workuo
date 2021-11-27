@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+	"fmt"
 	"time"
 	"workuo/features/application"
 )
@@ -42,8 +44,22 @@ func (ar *appService) RejectApplication(id int) error {
 	return nil
 }
 
-func (ar *appService) AcceptApplication(id int) error {
-	err := ar.appRepository.AcceptApplication(id)
+func (ar *appService) AcceptApplication(id int, recruiterId int) error {
+	data, err := ar.appRepository.GetApplicationByID(id)
+	if err != nil {
+		msg := fmt.Sprintf("application with id %v not found", id)
+		return errors.New(msg)
+	}
+	if data.Job.RecruiterId != recruiterId {
+		msg := fmt.Sprintf("recruiter with id %v not allowed to access post with id %v", recruiterId, id)
+		return errors.New(msg)
+	}
+	if data.Status != "pending" {
+		msg := fmt.Sprintf("this user has been %v", data.Status)
+		return errors.New(msg)
+	}
+
+	err = ar.appRepository.AcceptApplication(id)
 	if err != nil {
 		return err
 	}

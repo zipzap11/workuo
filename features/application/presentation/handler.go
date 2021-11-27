@@ -6,6 +6,7 @@ import (
 	"workuo/features/application"
 	"workuo/features/application/presentation/request"
 	"workuo/features/application/presentation/response"
+	"workuo/middleware"
 
 	"github.com/labstack/echo/v4"
 )
@@ -63,11 +64,19 @@ func (ah *AppHandler) RejectApplicationHandler(e echo.Context) error {
 
 func (ah *AppHandler) AcceptApplication(e echo.Context) error {
 	id, err := strconv.Atoi(e.QueryParam("id"))
+
+	claims := middleware.ExtractClaim(e)
+	role := claims["role"]
+	recruiterId := uint(claims["id"].(float64))
+
+	if role != "recruiter" {
+		return response.NewErrorResponse(e, "user not allowed to accept application", http.StatusForbidden)
+	}
 	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
 	}
 
-	err = ah.appService.AcceptApplication(id)
+	err = ah.appService.AcceptApplication(id, int(recruiterId))
 	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
 	}
