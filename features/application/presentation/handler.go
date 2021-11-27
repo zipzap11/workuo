@@ -65,7 +65,7 @@ func (ah *AppHandler) RejectApplicationHandler(e echo.Context) error {
 func (ah *AppHandler) AcceptApplication(e echo.Context) error {
 	id, err := strconv.Atoi(e.QueryParam("id"))
 	claims := middleware.ExtractClaim(e)
-	role := claims["role"].(string)
+	role := claims["role"]
 	recruiterId := uint(claims["userId"].(float64))
 
 	if role != "recruiter" {
