@@ -54,7 +54,14 @@ func (ah *AppHandler) RejectApplicationHandler(e echo.Context) error {
 		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
 	}
 
-	err = ah.appService.RejectApplication(id)
+	claims := middleware.ExtractClaim(e)
+	role := claims["role"]
+	recruiterId := uint(claims["id"].(float64))
+	if role != "recruiter" {
+		return response.NewErrorResponse(e, "user not allowed to reject application", http.StatusForbidden)
+	}
+
+	err = ah.appService.RejectApplication(id, int(recruiterId))
 	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
 	}
@@ -64,16 +71,15 @@ func (ah *AppHandler) RejectApplicationHandler(e echo.Context) error {
 
 func (ah *AppHandler) AcceptApplication(e echo.Context) error {
 	id, err := strconv.Atoi(e.QueryParam("id"))
+	if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
+	}
 
 	claims := middleware.ExtractClaim(e)
 	role := claims["role"]
 	recruiterId := uint(claims["id"].(float64))
-
 	if role != "recruiter" {
 		return response.NewErrorResponse(e, "user not allowed to accept application", http.StatusForbidden)
-	}
-	if err != nil {
-		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
 	}
 
 	err = ah.appService.AcceptApplication(id, int(recruiterId))
