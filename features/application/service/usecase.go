@@ -23,3 +23,12 @@ func (ar *appService) ApplyJob(data application.ApplicationCore) error {
 
 	return nil
 }
+
+func (ar *appService) AcceptApplication(id int) error {
+	err := ar.appRepository.AcceptApplication(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

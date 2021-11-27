@@ -35,6 +35,6 @@ func New() *echo.Echo {
 
 	// application
 	e.POST("/applications", presenter.ApplicationPresentation.ApplyJobHandler)
-
+	e.PUT("/applications/accept", presenter.ApplicationPresentation.AcceptApplication)
 	return e
 }
