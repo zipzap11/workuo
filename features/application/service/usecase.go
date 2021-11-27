@@ -35,9 +35,9 @@ func (ar *appService) GetApplicationByUserID(id int) ([]application.ApplicationC
 
 func (ar *appService) RejectApplication(id int) error {
 	err := ar.appRepository.RejectApplication(id)
-  if err != nil {
-    return err
-  }
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -49,4 +49,13 @@ func (ar *appService) AcceptApplication(id int) error {
 	}
 
 	return nil
+}
+
+func (ar *appService) GetApplicationByID(id int) (application.ApplicationCore, error) {
+	data, err := ar.appRepository.GetApplicationByID(id)
+	if err != nil {
+		return application.ApplicationCore{}, err
+	}
+
+	return data, nil
 }
