@@ -12,7 +12,55 @@ type Application struct {
 	UserID    uint
 	JobID     uint
 	Status    string
+	Job       Job
 	AppliedAt time.Time
+}
+
+type Job struct {
+	gorm.Model
+	Title        string
+	Description  string
+	RecruiterId  int
+	Requirements []Requirement
+}
+
+type Requirement struct {
+	gorm.Model
+	JobID       uint
+	Description string
+}
+
+func (j *Job) toCore() application.JobCore {
+	convertedRequirement := []application.RequirementCore{}
+	for _, req := range j.Requirements {
+		convertedRequirement = append(convertedRequirement, req.toCore())
+	}
+	return application.JobCore{
+		ID:           int(j.ID),
+		Title:        j.Title,
+		Description:  j.Description,
+		RecruiterId:  j.RecruiterId,
+		Requirements: convertedRequirement,
+		Created_at:   j.CreatedAt,
+		Updated_at:   j.UpdatedAt,
+	}
+}
+
+func (r *Requirement) toCore() application.RequirementCore {
+	return application.RequirementCore{
+		ID:          r.ID,
+		JobId:       r.JobID,
+		Description: r.Description,
+	}
+}
+
+func toCoreList(jobs []Job) []application.JobCore {
+	var convertedData []application.JobCore
+	for _, job := range jobs {
+		convertedData = append(convertedData, job.toCore())
+	}
+
+	return convertedData
 }
 
 func ToApplicationRecord(data application.ApplicationCore) Application {
@@ -31,6 +79,7 @@ func ToCore(data Application) application.ApplicationCore {
 		JobID:     data.JobID,
 		Status:    data.Status,
 		AppliedAt: data.AppliedAt,
+		Job:       data.Job.toCore(),
 	}
 }
 
