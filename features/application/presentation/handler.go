@@ -86,5 +86,19 @@ func (ah *AppHandler) GetApplicationByIDHandler(e echo.Context) error {
 		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
 	}
 
-	return response.NewSuccessResponse(e, "success", response.ToApplicationResponse(appCore))
+	return response.NewSuccessResponse(e, "success", response.ToApplicationResponseJob(appCore))
+}
+
+func (ah *AppHandler) GetApplicationByJobIDHandler(e echo.Context) error {
+	id, err := strconv.Atoi(e.Param("id"))
+	if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
+	}
+
+	apps, err := ah.appService.GetApplicationByJobID(id)
+	if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
+	}
+
+	return response.NewSuccessResponse(e, "success", response.ToApplicationResponseJobList(apps))
 }
