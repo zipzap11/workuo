@@ -24,7 +24,7 @@ func New() *echo.Echo {
 	e.GET("/jobs/:id", presenter.JobPresentation.GetJobPostByIdHandler)
 	e.DELETE("/jobs/:id", presenter.JobPresentation.DeleteJobPostHandler)
 	e.PUT("/jobs", presenter.JobPresentation.UpdateJobPostHandler)
-  
+
 	// user
 	e.GET("/users", presenter.UserPresentation.GetUsersHandler)
 	e.GET("/users/:id", presenter.UserPresentation.GetUserByIdHandler)
@@ -37,16 +37,14 @@ func New() *echo.Echo {
 	e.GET("/recruiters", presenter.RecruiterPresentation.GetRecruitersHandler)
 	e.GET("/recruiters/:id", presenter.RecruiterPresentation.GetRecruiterByIdHandler)
 
-
 	// invitation
 	jwt.POST("/invitations", presenter.InvitationPresentation.InviteUserHandler)
 
 	// application
 	e.POST("/applications", presenter.ApplicationPresentation.ApplyJobHandler)
-	e.GET("/applications/users", presenter.ApplicationPresentation.GetApplicationByUserIdHandler)
+	e.GET("/applications/users/:id", presenter.ApplicationPresentation.GetApplicationByUserIdHandler)
 	e.PUT("/applications/reject", presenter.ApplicationPresentation.RejectApplicationHandler)
 	e.PUT("/applications/accept", presenter.ApplicationPresentation.AcceptApplication)
-
 
 	return e
 }
