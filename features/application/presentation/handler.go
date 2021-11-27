@@ -44,7 +44,7 @@ func (ah *AppHandler) GetApplicationByUserIdHandler(e echo.Context) error {
 		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
 	}
 
-	return response.NewSuccessResponse(e, "success", applications)
+	return response.NewSuccessResponse(e, "success", response.ToApplicationResponseUserList(applications))
 }
 
 func (ah *AppHandler) RejectApplicationHandler(e echo.Context) error {
