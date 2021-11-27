@@ -33,6 +33,20 @@ func (ah *AppHandler) ApplyJobHandler(e echo.Context) error {
 	return response.NewSuccessResponse(e, "success", nil)
 }
 
+func (ah *AppHandler) GetApplicationByUserIdHandler(e echo.Context) error {
+	id, err := strconv.Atoi(e.QueryParam("user-id"))
+	if err != nil {
+		return response.NewSuccessResponse(e, err.Error(), http.StatusBadRequest)
+	}
+
+	applications, err := ah.appService.GetApplicationByUserID(id)
+  if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
+	}
+  
+  return response.NewSuccessResponse(e, "success", applications)
+}
+
 func (ah *AppHandler) RejectApplicationHandler(e echo.Context) error {
   id, err := strconv.Atoi(e.QueryParam("id"))
 	if err != nil {

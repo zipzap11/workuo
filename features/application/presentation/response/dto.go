@@ -23,3 +23,9 @@ func NewSuccessResponse(e echo.Context, msg string, data interface{}) error {
 		Data:    data,
 	})
 }
+
+type ApplicationResponse struct {
+	ID     uint
+	UserID uint
+	JobID  uint
+}

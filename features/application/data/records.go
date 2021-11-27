@@ -33,3 +33,11 @@ func ToCore(data Application) application.ApplicationCore {
 		AppliedAt: data.AppliedAt,
 	}
 }
+
+func ToCoreList(data []Application) []application.ApplicationCore {
+	convertedData := []application.ApplicationCore{}
+	for _, app := range data {
+		convertedData = append(convertedData, ToCore(app))
+	}
+	return convertedData
+}

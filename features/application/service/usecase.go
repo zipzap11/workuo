@@ -24,6 +24,15 @@ func (ar *appService) ApplyJob(data application.ApplicationCore) error {
 	return nil
 }
 
+func (ar *appService) GetApplicationByUserID(id int) ([]application.ApplicationCore, error) {
+	applications, err := ar.appRepository.GetApplicationByUserID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return applications, nil
+}
+
 func (ar *appService) RejectApplication(id int) error {
 	err := ar.appRepository.RejectApplication(id)
   if err != nil {
