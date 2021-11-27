@@ -76,3 +76,13 @@ func (ar *mysqlAppRepository) GetApplicationByJobID(id int) ([]application.Appli
 
 	return ToCoreList(applications), nil
 }
+
+func (ar *mysqlAppRepository) GetApplicationMultiParam(jobId int, userId int) (application.ApplicationCore, error) {
+	var data Application
+	err := ar.DB.Where("job_id = ? AND user_id = ?", jobId, userId).Find(&data).Error
+	if err != nil {
+		return application.ApplicationCore{}, err
+	}
+
+	return ToCore(data), nil
+}
