@@ -28,7 +28,7 @@ func (rs *recruiterService) LoginRecruiter(data recruiter.RecruiterCore) (recrui
 		return recruiter.RecruiterCore{}, err
 	}
 
-	data.Token, err = middleware.CreateToken(data.ID, data.Company)
+	data.Token, err = middleware.CreateToken(data.ID, "recruiter")
 	if err != nil {
 		return recruiter.RecruiterCore{}, err
 	}
