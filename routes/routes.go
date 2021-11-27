@@ -44,6 +44,7 @@ func New() *echo.Echo {
 	e.POST("/applications", presenter.ApplicationPresentation.ApplyJobHandler)
 	e.GET("/applications/:id", presenter.ApplicationPresentation.GetApplicationByIDHandler)
 	e.GET("/applications/users/:id", presenter.ApplicationPresentation.GetApplicationByUserIdHandler)
+	e.GET("/applications/jobs/:id", presenter.ApplicationPresentation.GetApplicationByJobIDHandler)
 	e.PUT("/applications/reject", presenter.ApplicationPresentation.RejectApplicationHandler)
 	e.PUT("/applications/accept", presenter.ApplicationPresentation.AcceptApplication)
 
