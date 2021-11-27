@@ -34,12 +34,26 @@ func (ah *AppHandler) ApplyJobHandler(e echo.Context) error {
 }
 
 func (ah *AppHandler) RejectApplicationHandler(e echo.Context) error {
+  id, err := strconv.Atoi(e.QueryParam("id"))
+	if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
+	}
+  
+  err = ah.appService.RejectApplication(id)
+  if err != nil {
+		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
+	}
+  
+  return response.NewSuccessResponse(e, "success", nil)
+}
+
+func (ah *AppHandler) AcceptApplication(e echo.Context) error {
 	id, err := strconv.Atoi(e.QueryParam("id"))
 	if err != nil {
-		return response.NewSuccessResponse(e, err.Error(), http.StatusBadRequest)
+		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
 	}
-
-	err = ah.appService.RejectApplication(id)
+  
+	err = ah.appService.AcceptApplication(id)
 	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
 	}

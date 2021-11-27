@@ -15,13 +15,15 @@ type Job struct {
 }
 
 type Requirement struct {
-	ID          uint `gorm: "primaryKey"`
+	gorm.Model
 	JobID       uint
 	Description string
 }
 
 func toRecordRequirement(req job.RequirementCore) Requirement {
 	return Requirement{
+		ID:          req.ID,
+		JobID:       req.JobId,
 		Description: req.Description,
 	}
 }
@@ -70,4 +72,14 @@ func toCoreList(jobs []Job) []job.JobCore {
 	}
 
 	return convertedData
+}
+
+func SeparateJobRequirement(data Job) (Job, []Requirement) {
+	newJob := Job{
+		Title:       data.Title,
+		Description: data.Description,
+		RecruiterId: data.RecruiterId,
+	}
+	newRequirements := data.Requirements
+	return newJob, newRequirements
 }

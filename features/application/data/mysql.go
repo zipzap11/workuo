@@ -27,6 +27,15 @@ func (ar *mysqlAppRepository) ApplyJob(data application.ApplicationCore) error {
 
 func (ar *mysqlAppRepository) RejectApplication(id int) error {
 	err := ar.DB.Model(&Application{}).Where("id = ?", id).Update("status", "rejected").Error
+  if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (ar *mysqlAppRepository) AcceptApplication(id int) error {
+	err := ar.DB.Model(&Application{}).Where("id = ?", id).Update("status", "accepted").Error
 	if err != nil {
 		return err
 	}

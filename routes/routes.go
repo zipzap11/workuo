@@ -19,7 +19,9 @@ func New() *echo.Echo {
 	e.POST("/jobs", presenter.JobPresentation.CreateJobPostHandler)
 	e.GET("/jobs", presenter.JobPresentation.GetJobPostHandler)
 	e.GET("/jobs/:id", presenter.JobPresentation.GetJobPostByIdHandler)
-
+	e.DELETE("/jobs/:id", presenter.JobPresentation.DeleteJobPostHandler)
+	e.PUT("/jobs", presenter.JobPresentation.UpdateJobPostHandler)
+  
 	// user
 	e.GET("/users", presenter.UserPresentation.GetUsersHandler)
 	e.GET("/users/:id", presenter.UserPresentation.GetUserByIdHandler)
@@ -35,5 +37,7 @@ func New() *echo.Echo {
 	// application
 	e.POST("/applications", presenter.ApplicationPresentation.ApplyJobHandler)
 	e.PUT("/applications/reject", presenter.ApplicationPresentation.RejectApplicationHandler)
+	e.PUT("/applications/accept", presenter.ApplicationPresentation.AcceptApplication)
+
 	return e
 }
