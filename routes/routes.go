@@ -19,34 +19,34 @@ func New() *echo.Echo {
 	}))
 
 	// job
-	e.POST("/jobs", presenter.JobPresentation.CreateJobPostHandler)
-	e.GET("/jobs", presenter.JobPresentation.GetJobPostHandler)
-	e.GET("/jobs/:id", presenter.JobPresentation.GetJobPostByIdHandler)
-	e.DELETE("/jobs/:id", presenter.JobPresentation.DeleteJobPostHandler)
-	e.PUT("/jobs", presenter.JobPresentation.UpdateJobPostHandler)
+	jwt.POST("/jobs", presenter.JobPresentation.CreateJobPostHandler)
+	jwt.GET("/jobs", presenter.JobPresentation.GetJobPostHandler)
+	jwt.GET("/jobs/:id", presenter.JobPresentation.GetJobPostByIdHandler)
+	jwt.DELETE("/jobs/:id", presenter.JobPresentation.DeleteJobPostHandler)
+	jwt.PUT("/jobs", presenter.JobPresentation.UpdateJobPostHandler)
 
 	// user
-	e.GET("/users", presenter.UserPresentation.GetUsersHandler)
-	e.GET("/users/:id", presenter.UserPresentation.GetUserByIdHandler)
+	jwt.GET("/users", presenter.UserPresentation.GetUsersHandler)
+	jwt.GET("/users/:id", presenter.UserPresentation.GetUserByIdHandler)
 	e.POST("/users/register", presenter.UserPresentation.RegisterUserHandler)
 	e.POST("/users/login", presenter.UserPresentation.LoginUserHandler)
 
 	// recruiter
 	e.POST("/recruiters/register", presenter.RecruiterPresentation.RegisterRecruiterHandler)
 	e.POST("/recruiters/login", presenter.RecruiterPresentation.LoginRecruiterHandler)
-	e.GET("/recruiters", presenter.RecruiterPresentation.GetRecruitersHandler)
-	e.GET("/recruiters/:id", presenter.RecruiterPresentation.GetRecruiterByIdHandler)
+	jwt.GET("/recruiters", presenter.RecruiterPresentation.GetRecruitersHandler)
+	jwt.GET("/recruiters/:id", presenter.RecruiterPresentation.GetRecruiterByIdHandler)
 
 	// invitation
 	jwt.POST("/invitations", presenter.InvitationPresentation.InviteUserHandler)
 
 	// application
-	e.POST("/applications", presenter.ApplicationPresentation.ApplyJobHandler)
-	e.GET("/applications/:id", presenter.ApplicationPresentation.GetApplicationByIDHandler)
-	e.GET("/applications/users/:id", presenter.ApplicationPresentation.GetApplicationByUserIdHandler)
-	e.GET("/applications/jobs/:id", presenter.ApplicationPresentation.GetApplicationByJobIDHandler)
-	e.PUT("/applications/reject", presenter.ApplicationPresentation.RejectApplicationHandler)
-	e.PUT("/applications/accept", presenter.ApplicationPresentation.AcceptApplication)
+	jwt.POST("/applications", presenter.ApplicationPresentation.ApplyJobHandler)
+	jwt.GET("/applications/:id", presenter.ApplicationPresentation.GetApplicationByIDHandler)
+	jwt.GET("/applications/users/:id", presenter.ApplicationPresentation.GetApplicationByUserIdHandler)
+	jwt.GET("/applications/jobs/:id", presenter.ApplicationPresentation.GetApplicationByJobIDHandler)
+	jwt.PUT("/applications/reject", presenter.ApplicationPresentation.RejectApplicationHandler)
+	jwt.PUT("/applications/accept", presenter.ApplicationPresentation.AcceptApplication)
 
 	return e
 }
