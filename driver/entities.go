@@ -1,6 +1,7 @@
 package driver
 
 import (
+	InvitationModel "workuo/features/invitation/data"
 	AppModel "workuo/features/application/data"
 	JobModel "workuo/features/job/data"
 	RecruiterModel "workuo/features/recruiter/data"
@@ -19,6 +20,7 @@ func registerEntities() []Entity {
 		{UserModel.Experience{}},
 		{UserModel.Skillset{}},
 		{RecruiterModel.Recruiter{}},
+		{InvitationModel.Invitation{}},
 		{AppModel.Application{}},
 	}
 }
