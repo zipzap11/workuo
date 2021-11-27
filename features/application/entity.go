@@ -46,6 +46,7 @@ type Repository interface {
 	GetApplicationByUserID(int) ([]ApplicationCore, error)
 	GetApplicationByID(int) (ApplicationCore, error)
 	GetApplicationByJobID(int) ([]ApplicationCore, error)
+	GetApplicationMultiParam(int, int) (ApplicationCore, error)
 	RejectApplication(int) error
 	AcceptApplication(int) error
 }
