@@ -166,3 +166,21 @@ func (is *invitationService) GetInvitationByUserID(userId int) ([]invitation.Inv
 
 	return data, nil
 }
+
+func (is *invitationService) GetInvitationByJobID(jobId int, recId int) ([]invitation.InvitationCore, error) {
+	jobData, err := is.jobService.GetJobPostById(jobId)
+	if err != nil {
+		return nil, err
+	}
+	if jobData.RecruiterId != recId {
+		msg := fmt.Sprintf("recruiter with id %v doesn't have access", recId)
+		return nil, errors.New(msg)
+	}
+
+	data, err := is.invRepository.GetInvitationByJobID(jobId)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}

@@ -41,6 +41,7 @@ func New() *echo.Echo {
 	jwt.POST("/invitations", presenter.InvitationPresentation.InviteUserHandler)
 	jwt.GET("/invitations/:id", presenter.InvitationPresentation.GetInvitationByIDHandler)
 	jwt.GET("/invitations/users", presenter.InvitationPresentation.GetInvitationByUserID)
+	jwt.GET("/invitations/jobs/:id", presenter.InvitationPresentation.GetInvitationByJobID)
 	jwt.PUT("/invitations/accept", presenter.InvitationPresentation.AcceptInvitationHandler)
 	jwt.PUT("/invitations/reject", presenter.InvitationPresentation.RejectInvitationHandler)
 

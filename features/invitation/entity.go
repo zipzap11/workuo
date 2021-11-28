@@ -61,6 +61,7 @@ type Service interface {
 	AcceptInvitation(userId int, invId int) error
 	RejectInvitation(userId int, invId int) error
 	GetInvitationByUserID(userId int) ([]InvitationCore, error)
+	GetInvitationByJobID(jobId int, recId int) ([]InvitationCore, error)
 }
 
 type Repository interface {
@@ -69,4 +70,5 @@ type Repository interface {
 	AcceptInvitation(invId int) error
 	RejectInvitation(invId int) error
 	GetInvitationByUserID(userId int) ([]InvitationCore, error)
+	GetInvitationByJobID(jobId int) ([]InvitationCore, error)
 }

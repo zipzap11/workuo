@@ -1,6 +1,7 @@
 package data
 
 import (
+	"time"
 	"workuo/features/invitation"
 
 	"gorm.io/gorm"
@@ -14,6 +15,7 @@ type Invitation struct {
 	JobID       uint
 	Status      string
 	Job         Job
+	User        User
 }
 
 type Job struct {
@@ -21,6 +23,16 @@ type Job struct {
 	Title       string
 	Description string
 	RecruiterId int
+}
+
+type User struct {
+	ID      int
+	Name    string
+	Dob     time.Time
+	Gender  string
+	Address string
+	Title   string
+	Bio     string
 }
 
 func ToCore(data Invitation) invitation.InvitationCore {
@@ -31,6 +43,7 @@ func ToCore(data Invitation) invitation.InvitationCore {
 		JobID:       data.JobID,
 		Status:      data.Status,
 		Job:         ToJobCore(data.Job),
+		User:        ToUserCore(data.User),
 	}
 }
 
@@ -58,5 +71,17 @@ func ToJobCore(data Job) invitation.JobCore {
 		RecruiterId: data.RecruiterId,
 		Title:       data.Title,
 		Description: data.Description,
+	}
+}
+
+func ToUserCore(data User) invitation.UserCore {
+	return invitation.UserCore{
+		ID:      uint(data.ID),
+		Name:    data.Name,
+		Title:   data.Title,
+		Dob:     data.Dob,
+		Gender:  data.Gender,
+		Address: data.Address,
+		Bio:     data.Bio,
 	}
 }

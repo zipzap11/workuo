@@ -39,7 +39,7 @@ func ToInvitationDetailResponse(data invitation.InvitationCore) InvitationDetail
 		ID:          data.ID,
 		RecruiterID: data.ID,
 		Status:      data.Status,
-		User:        ToUserResponse(data.User),
+		User:        ToUserDetailResponse(data.User),
 		Job:         ToJobResponseDetail(data.Job),
 	}
 }
@@ -68,7 +68,7 @@ type ExperienceResponse struct {
 	EndDate     time.Time
 }
 
-func ToUserResponse(data invitation.UserCore) UserDetailResponse {
+func ToUserDetailResponse(data invitation.UserCore) UserDetailResponse {
 	return UserDetailResponse{
 		ID:          data.ID,
 		Name:        data.Name,
@@ -159,6 +159,23 @@ type JobResponse struct {
 	Description string
 }
 
+type InvitationJobResponse struct {
+	ID          uint
+	RecruiterID uint
+	Status      string
+	User        UserResponse
+}
+
+type UserResponse struct {
+	ID      uint
+	Name    string
+	Dob     time.Time
+	Gender  string
+	Address string
+	Title   string
+	Bio     string
+}
+
 func ToInvitationUserResponse(data invitation.InvitationCore) InvitationUserResponse {
 	return InvitationUserResponse{
 		ID:          data.ID,
@@ -180,6 +197,36 @@ func ToInvitationUserResponseList(data []invitation.InvitationCore) []Invitation
 	converted := []InvitationUserResponse{}
 	for _, inv := range data {
 		converted = append(converted, ToInvitationUserResponse(inv))
+	}
+
+	return converted
+}
+
+func ToInvitationJobResponse(data invitation.InvitationCore) InvitationJobResponse {
+	return InvitationJobResponse{
+		ID:          data.ID,
+		RecruiterID: data.RecruiterID,
+		Status:      data.Status,
+		User:        ToUserResponse(data.User),
+	}
+}
+
+func ToUserResponse(data invitation.UserCore) UserResponse {
+	return UserResponse{
+		ID:      data.ID,
+		Name:    data.Name,
+		Dob:     data.Dob,
+		Gender:  data.Gender,
+		Address: data.Address,
+		Title:   data.Title,
+		Bio:     data.Bio,
+	}
+}
+
+func ToInvitationJobResponseList(data []invitation.InvitationCore) []InvitationJobResponse {
+	converted := []InvitationJobResponse{}
+	for _, inv := range data {
+		converted = append(converted, ToInvitationJobResponse(inv))
 	}
 
 	return converted
