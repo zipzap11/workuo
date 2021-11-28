@@ -33,3 +33,12 @@ func (ir *invitationRepository) GetInvitationByID(id int) (invitation.Invitation
 
 	return ToCore(data), nil
 }
+
+func (ir *invitationRepository) AcceptInvitation(id int) error {
+	err := ir.DB.Model(&Invitation{}).Where("id = ?", id).Update("status", "accepted").Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
