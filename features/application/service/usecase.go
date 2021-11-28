@@ -6,17 +6,20 @@ import (
 	"time"
 	"workuo/features/application"
 	"workuo/features/job"
+	"workuo/features/user"
 )
 
 type appService struct {
 	appRepository application.Repository
 	jobService    job.Service
+	userService   user.Service
 }
 
-func NewAppService(ar application.Repository, js job.Service) application.Service {
+func NewAppService(ar application.Repository, js job.Service, us user.Service) application.Service {
 	return &appService{
 		appRepository: ar,
 		jobService:    js,
+		userService:   us,
 	}
 }
 
@@ -110,12 +113,25 @@ func (ar *appService) AcceptApplication(id int, recruiterId int) error {
 }
 
 func (ar *appService) GetApplicationByID(id int) (application.ApplicationCore, error) {
-	data, err := ar.appRepository.GetApplicationByID(id)
+	appData, err := ar.appRepository.GetApplicationByID(id)
 	if err != nil {
 		return application.ApplicationCore{}, err
 	}
 
-	return data, nil
+	userData, err := ar.userService.GetUserById(int(appData.UserID))
+	if err != nil {
+		return application.ApplicationCore{}, err
+	}
+
+	jobData, err := ar.jobService.GetJobPostById(int(appData.JobID))
+	if err != nil {
+		return application.ApplicationCore{}, err
+	}
+
+	appData.User = ToUserCore(userData)
+	appData.Job = ToJobCore(jobData)
+
+	return appData, nil
 }
 
 func (ar *appService) GetApplicationByJobID(id int) ([]application.ApplicationCore, error) {
