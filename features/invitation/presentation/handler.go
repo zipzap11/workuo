@@ -51,3 +51,24 @@ func (ih *InvitationHandler) GetInvitationByIDHandler(e echo.Context) error {
 
 	return response.NewSuccessResponse(e, response.ToInvitationResponse(data))
 }
+
+func (ih *InvitationHandler) AcceptInvitation(e echo.Context) error {
+	id, err := strconv.Atoi(e.QueryParam("id"))
+	if err != nil {
+		return response.NewErrorResponse(e, http.StatusBadRequest, err.Error())
+	}
+
+	claims := middleware.ExtractClaim(e)
+	role := claims["role"]
+	userId := int(claims["id"].(float64))
+	if role != "user" {
+		return response.NewErrorResponse(e, http.StatusBadRequest, "role not allowed to accept invitation")
+	}
+
+	err = ih.invService.AcceptInvitation(userId, id)
+	if err != nil {
+		return response.NewErrorResponse(e, http.StatusInternalServerError, err.Error())
+	}
+
+	return response.NewSuccessResponse(e, nil)
+}

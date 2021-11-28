@@ -46,7 +46,9 @@ func (ar *appService) ApplyJob(data application.ApplicationCore) error {
 		return errors.New(msg)
 	}
 
-	data.Status = "pending"
+	if data.Status == "" {
+		data.Status = "pending"
+	}
 	data.AppliedAt = time.Now()
 
 	err = ar.appRepository.ApplyJob(data)
