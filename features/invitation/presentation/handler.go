@@ -2,6 +2,7 @@ package presentation
 
 import (
 	"net/http"
+	"strconv"
 	"workuo/features/invitation"
 	"workuo/features/invitation/presentation/request"
 	"workuo/features/invitation/presentation/response"
@@ -35,4 +36,18 @@ func (ih *InvitationHandler) InviteUserHandler(e echo.Context) error {
 	}
 
 	return response.NewSuccessResponse(e, nil)
+}
+
+func (ih *InvitationHandler) GetInvitationByIDHandler(e echo.Context) error {
+	id, err := strconv.Atoi(e.Param("id"))
+	if err != nil {
+		return response.NewErrorResponse(e, http.StatusBadRequest, err.Error())
+	}
+
+	data, err := ih.invService.GetInvitationByID(id)
+	if err != nil {
+		return response.NewErrorResponse(e, http.StatusInternalServerError, err.Error())
+	}
+
+	return response.NewSuccessResponse(e, response.ToInvitationResponse(data))
 }
