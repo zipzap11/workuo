@@ -70,3 +70,29 @@ func (is *invitationService) InviteUser(data invitation.InvitationCore) error {
 
 	return nil
 }
+
+func (is *invitationService) GetInvitationByID(id int) (invitation.InvitationCore, error) {
+	invData, err := is.invRepository.GetInvitationByID(id)
+	if err != nil {
+		return invitation.InvitationCore{}, err
+	}
+	if invData.ID == 0 {
+		msg := fmt.Sprintf("invitation with id %v doesn't exist", id)
+		return invitation.InvitationCore{}, errors.New(msg)
+	}
+
+	userData, err := is.userService.GetUserById(int(invData.UserID))
+	if err != nil {
+		return invitation.InvitationCore{}, err
+	}
+
+	jobData, err := is.jobService.GetJobPostById(int(invData.JobID))
+	if err != nil {
+		return invitation.InvitationCore{}, err
+	}
+
+	invData.User = ToUserCore(userData)
+	invData.Job = ToJobCore(jobData)
+
+	return invData, nil
+}
