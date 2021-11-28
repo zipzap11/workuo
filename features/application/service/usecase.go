@@ -142,3 +142,12 @@ func (ar *appService) GetApplicationByJobID(id int) ([]application.ApplicationCo
 
 	return data, nil
 }
+
+func (ar *appService) GetApplicationMultiParam(id int, userId int) (application.ApplicationCore, error) {
+	data, err := ar.appRepository.GetApplicationMultiParam(id, userId)
+	if err != nil {
+		return application.ApplicationCore{}, err
+	}
+
+	return data, nil
+}
