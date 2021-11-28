@@ -42,3 +42,12 @@ func (ir *invitationRepository) AcceptInvitation(id int) error {
 
 	return nil
 }
+
+func (ir *invitationRepository) RejectInvitation(id int) error {
+	err := ir.DB.Model(&Invitation{}).Where("id = ?", id).Update("status", "rejected").Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
