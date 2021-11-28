@@ -49,7 +49,7 @@ func (ih *InvitationHandler) GetInvitationByIDHandler(e echo.Context) error {
 		return response.NewErrorResponse(e, http.StatusInternalServerError, err.Error())
 	}
 
-	return response.NewSuccessResponse(e, response.ToInvitationResponse(data))
+	return response.NewSuccessResponse(e, response.ToInvitationDetailResponse(data))
 }
 
 func (ih *InvitationHandler) AcceptInvitationHandler(e echo.Context) error {
@@ -92,4 +92,20 @@ func (ih *InvitationHandler) RejectInvitationHandler(e echo.Context) error {
 	}
 
 	return response.NewSuccessResponse(e, nil)
+}
+
+func (ih *InvitationHandler) GetInvitationByUserID(e echo.Context) error {
+	claims := middleware.ExtractClaim(e)
+	role := claims["role"]
+	userId := int(claims["id"].(float64))
+	if role != "user" {
+		return response.NewErrorResponse(e, http.StatusBadRequest, "role not allowed to get invitations")
+	}
+
+	data, err := ih.invService.GetInvitationByUserID(userId)
+	if err != nil {
+		return response.NewErrorResponse(e, http.StatusInternalServerError, err.Error())
+	}
+
+	return response.NewSuccessResponse(e, response.ToInvitationUserResponseList(data))
 }
