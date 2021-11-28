@@ -109,7 +109,7 @@ func (ah *AppHandler) GetApplicationByIDHandler(e echo.Context) error {
 		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
 	}
 
-	return response.NewSuccessResponse(e, "success", response.ToApplicationResponseJob(appCore))
+	return response.NewSuccessResponse(e, "success", response.ToApplicationResponse(appCore))
 }
 
 func (ah *AppHandler) GetApplicationByJobIDHandler(e echo.Context) error {
