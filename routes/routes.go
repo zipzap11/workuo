@@ -39,6 +39,7 @@ func New() *echo.Echo {
 
 	// invitation
 	jwt.POST("/invitations", presenter.InvitationPresentation.InviteUserHandler)
+	jwt.GET("/invitations/:id", presenter.InvitationPresentation.GetInvitationByIDHandler)
 
 	// application
 	jwt.POST("/applications", presenter.ApplicationPresentation.ApplyJobHandler)
