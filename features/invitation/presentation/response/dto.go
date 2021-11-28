@@ -26,25 +26,25 @@ func NewErrorResponse(e echo.Context, code int, msg string) error {
 	})
 }
 
-type InvitationResponse struct {
+type InvitationDetailResponse struct {
 	ID          uint
 	RecruiterID uint
 	Status      string
-	User        UserResponse
-	Job         JobResponse
+	User        UserDetailResponse
+	Job         JobDetailResponse
 }
 
-func ToInvitationResponse(data invitation.InvitationCore) InvitationResponse {
-	return InvitationResponse{
+func ToInvitationDetailResponse(data invitation.InvitationCore) InvitationDetailResponse {
+	return InvitationDetailResponse{
 		ID:          data.ID,
 		RecruiterID: data.ID,
 		Status:      data.Status,
 		User:        ToUserResponse(data.User),
-		Job:         ToJobResponse(data.Job),
+		Job:         ToJobResponseDetail(data.Job),
 	}
 }
 
-type UserResponse struct {
+type UserDetailResponse struct {
 	ID          uint
 	Name        string
 	Dob         time.Time
@@ -68,8 +68,8 @@ type ExperienceResponse struct {
 	EndDate     time.Time
 }
 
-func ToUserResponse(data invitation.UserCore) UserResponse {
-	return UserResponse{
+func ToUserResponse(data invitation.UserCore) UserDetailResponse {
+	return UserDetailResponse{
 		ID:          data.ID,
 		Name:        data.Name,
 		Dob:         data.Dob,
@@ -109,7 +109,7 @@ func ToExperiencesResponse(data []invitation.ExperienceCore) []ExperienceRespons
 	return converted
 }
 
-type JobResponse struct {
+type JobDetailResponse struct {
 	ID           int
 	Title        string
 	Description  string
@@ -123,8 +123,8 @@ type RequirementResponse struct {
 	Description string
 }
 
-func ToJobResponse(data invitation.JobCore) JobResponse {
-	return JobResponse{
+func ToJobResponseDetail(data invitation.JobCore) JobDetailResponse {
+	return JobDetailResponse{
 		ID:           data.ID,
 		Title:        data.Title,
 		Description:  data.Description,
@@ -141,6 +141,45 @@ func ToRequirementsResponse(data []invitation.RequirementCore) []RequirementResp
 			Description: req.Description,
 		}
 		converted = append(converted, temp)
+	}
+
+	return converted
+}
+
+type InvitationUserResponse struct {
+	ID          uint
+	RecruiterID uint
+	Status      string
+	Job         JobResponse
+}
+
+type JobResponse struct {
+	ID          int
+	Title       string
+	Description string
+}
+
+func ToInvitationUserResponse(data invitation.InvitationCore) InvitationUserResponse {
+	return InvitationUserResponse{
+		ID:          data.ID,
+		RecruiterID: data.RecruiterID,
+		Status:      data.Status,
+		Job:         ToJobResponse(data.Job),
+	}
+}
+
+func ToJobResponse(data invitation.JobCore) JobResponse {
+	return JobResponse{
+		ID:          data.ID,
+		Title:       data.Title,
+		Description: data.Description,
+	}
+}
+
+func ToInvitationUserResponseList(data []invitation.InvitationCore) []InvitationUserResponse {
+	converted := []InvitationUserResponse{}
+	for _, inv := range data {
+		converted = append(converted, ToInvitationUserResponse(inv))
 	}
 
 	return converted
