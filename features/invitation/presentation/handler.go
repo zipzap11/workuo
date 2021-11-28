@@ -109,3 +109,24 @@ func (ih *InvitationHandler) GetInvitationByUserID(e echo.Context) error {
 
 	return response.NewSuccessResponse(e, response.ToInvitationUserResponseList(data))
 }
+
+func (ih *InvitationHandler) GetInvitationByJobID(e echo.Context) error {
+	jobId, err := strconv.Atoi(e.Param("id"))
+	if err != nil {
+		return response.NewErrorResponse(e, http.StatusBadRequest, err.Error())
+	}
+
+	claims := middleware.ExtractClaim(e)
+	recId := int(claims["id"].(float64))
+	role := claims["role"]
+	if role != "recruiter" {
+		return response.NewErrorResponse(e, http.StatusBadRequest, "role not allowed to get invitations")
+	}
+
+	data, err := ih.invService.GetInvitationByJobID(jobId, recId)
+	if err != nil {
+		return response.NewErrorResponse(e, http.StatusInternalServerError, err.Error())
+	}
+
+	return response.NewSuccessResponse(e, response.ToInvitationJobResponseList(data))
+}
