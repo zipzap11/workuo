@@ -55,7 +55,7 @@ func Init() jobPresenter {
 
 	// invitation layer
 	invData := invitationData.NewInvitationRepository(driver.DB)
-	invService := invitationService.NewInvitationService(invData, jobService)
+	invService := invitationService.NewInvitationService(invData, jobService, userService, appService)
 
 	return jobPresenter{
 		JobPresentation:         *jobPresent.NewJobHandler(jobService),
