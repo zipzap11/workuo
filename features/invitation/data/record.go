@@ -13,6 +13,14 @@ type Invitation struct {
 	UserID      uint
 	JobID       uint
 	Status      string
+	Job         Job
+}
+
+type Job struct {
+	ID          int
+	Title       string
+	Description string
+	RecruiterId int
 }
 
 func ToCore(data Invitation) invitation.InvitationCore {
@@ -22,6 +30,7 @@ func ToCore(data Invitation) invitation.InvitationCore {
 		UserID:      data.UserID,
 		JobID:       data.JobID,
 		Status:      data.Status,
+		Job:         ToJobCore(data.Job),
 	}
 }
 
@@ -41,4 +50,13 @@ func ToCoreList(data []Invitation) []invitation.InvitationCore {
 		convertedData = append(convertedData, ToCore(data))
 	}
 	return convertedData
+}
+
+func ToJobCore(data Job) invitation.JobCore {
+	return invitation.JobCore{
+		ID:          data.ID,
+		RecruiterId: data.RecruiterId,
+		Title:       data.Title,
+		Description: data.Description,
+	}
 }
