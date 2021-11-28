@@ -51,7 +51,7 @@ func Init() jobPresenter {
 
 	// application layer
 	appData := applicationData.NewMysqlAppRepository(driver.DB)
-	appService := applicationService.NewAppService(appData, jobService)
+	appService := applicationService.NewAppService(appData, jobService, userService)
 
 	// invitation layer
 	invData := invitationData.NewInvitationRepository(driver.DB)
