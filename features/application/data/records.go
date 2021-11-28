@@ -52,8 +52,6 @@ func (j *Job) toCore() application.JobCore {
 		Description:  j.Description,
 		RecruiterId:  j.RecruiterId,
 		Requirements: convertedRequirement,
-		Created_at:   j.CreatedAt,
-		Updated_at:   j.UpdatedAt,
 	}
 }
 
