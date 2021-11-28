@@ -131,3 +131,29 @@ func (is *invitationService) AcceptInvitation(userId int, invId int) error {
 
 	return nil
 }
+
+func (is *invitationService) RejectInvitation(userId int, invId int) error {
+	data, err := is.invRepository.GetInvitationByID(invId)
+	if err != nil {
+		return err
+	}
+	if data.ID == 0 {
+		msg := fmt.Sprintf("invitation with id %v doesn't exist", invId)
+		return errors.New(msg)
+	}
+	if data.UserID != uint(userId) {
+		msg := fmt.Sprintf("user with id %v did not have invitation with id %v", userId, invId)
+		return errors.New(msg)
+	}
+	if data.Status != "pending" {
+		msg := fmt.Sprintf("user with id %v has %v invitation with id %v", userId, data.Status, invId)
+		return errors.New(msg)
+	}
+
+	err = is.invRepository.RejectInvitation(invId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
