@@ -12,6 +12,7 @@ type Invitation struct {
 	RecruiterID uint
 	UserID      uint
 	JobID       uint
+	Status      string
 }
 
 func ToCore(data Invitation) invitation.InvitationCore {
@@ -20,6 +21,7 @@ func ToCore(data Invitation) invitation.InvitationCore {
 		RecruiterID: data.RecruiterID,
 		UserID:      data.UserID,
 		JobID:       data.JobID,
+		Status:      data.Status,
 	}
 }
 
@@ -29,6 +31,7 @@ func FromCore(data invitation.InvitationCore) Invitation {
 		RecruiterID: data.RecruiterID,
 		UserID:      data.UserID,
 		JobID:       data.JobID,
+		Status:      data.Status,
 	}
 }
 
