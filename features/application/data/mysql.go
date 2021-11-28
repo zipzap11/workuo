@@ -56,7 +56,7 @@ func (ar *mysqlAppRepository) AcceptApplication(id int) error {
 
 func (ar *mysqlAppRepository) GetApplicationByID(id int) (application.ApplicationCore, error) {
 	var data Application
-	err := ar.DB.Joins("Job").First(&data, id).Error
+	err := ar.DB.Debug().First(&data, id).Error
 	if err != nil {
 		return application.ApplicationCore{}, err
 	}
