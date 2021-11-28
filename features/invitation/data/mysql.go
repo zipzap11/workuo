@@ -51,3 +51,13 @@ func (ir *invitationRepository) RejectInvitation(id int) error {
 
 	return nil
 }
+
+func (ir *invitationRepository) GetInvitationByUserID(userId int) ([]invitation.InvitationCore, error) {
+	var invitations []Invitation
+	err := ir.DB.Debug().Where("invitations.user_id = ?", userId).Joins("Job").Find(&invitations).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return ToCoreList(invitations), nil
+}
