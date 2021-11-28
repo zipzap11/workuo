@@ -20,15 +20,14 @@ func NewInvitationHandler(is invitation.Service) *InvitationHandler {
 
 func (ih *InvitationHandler) InviteUserHandler(e echo.Context) error {
 	var payloadData request.InvitationRequest
-
-	claims := middleware.ExtractClaim(e)
-	payloadData.RecruiterID = uint(claims["userId"].(float64))
-	payloadData.Role = claims["role"].(string)
-
 	err := e.Bind(&payloadData)
 	if err != nil {
 		return response.NewErrorResponse(e, http.StatusBadRequest, err.Error())
 	}
+
+	claims := middleware.ExtractClaim(e)
+	payloadData.RecruiterID = uint(claims["id"].(float64))
+	payloadData.Role = claims["role"].(string)
 
 	err = ih.invService.InviteUser(request.ToCore(payloadData))
 	if err != nil {
