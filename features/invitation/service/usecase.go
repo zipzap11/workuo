@@ -157,3 +157,12 @@ func (is *invitationService) RejectInvitation(userId int, invId int) error {
 
 	return nil
 }
+
+func (is *invitationService) GetInvitationByUserID(userId int) ([]invitation.InvitationCore, error) {
+	data, err := is.invRepository.GetInvitationByUserID(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
