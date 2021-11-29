@@ -23,6 +23,11 @@ type SkillsetCore struct {
 	Category string
 }
 
+type UserSkillsetCore struct {
+	UserID     uint
+	SkillsetId uint
+}
+
 type ExperienceCore struct {
 	Id          uint
 	UserId      uint
@@ -37,6 +42,7 @@ type Service interface {
 	LoginUser(data UserCore) (user UserCore, err error)
 	GetUsers(data UserCore) (users []UserCore, err error)
 	GetUserById(id int) (user UserCore, err error)
+	UpdateUser(data UserCore) error
 }
 
 type Repository interface {
@@ -44,4 +50,13 @@ type Repository interface {
 	CheckUser(data UserCore) (user UserCore, err error)
 	GetData(UserCore) (user []UserCore, err error)
 	GetDataById(id int) (user UserCore, err error)
+	UpdateUser(data UserCore) error
+	CreateExperience(data ExperienceCore) error
+	DeleteExperience(id int) error
+	UpdateExperience(data ExperienceCore) error
+	CreateSkillset(data SkillsetCore) (int, error)
+	UpdateUserSkillset(userId int, skillsetId int, newSkillsetId int) error
+	DeleteUserSkillset(userId int, skillsetId int) error
+	GetUserSkillsets(data UserCore) ([]UserSkillsetCore, error)
+	AddUserSkillset(userId int, skillsetId int) error
 }
