@@ -6,6 +6,7 @@ import (
 	"workuo/features/user"
 	"workuo/features/user/presentation/request"
 	"workuo/features/user/presentation/response"
+	"workuo/middleware"
 
 	"github.com/labstack/echo/v4"
 )
@@ -102,6 +103,38 @@ func (uh *UserHandler) GetUserByIdHandler(e echo.Context) error {
 	return e.JSON(http.StatusOK, map[string]interface{}{
 		"message": "Success",
 		"data":    response.ToUserResponse(data),
+	})
+
+}
+
+func (uh *UserHandler) UpdateUserHandler(e echo.Context) error {
+	var userData request.UserRequest
+	err := e.Bind(&userData)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": err.Error(),
+		})
+	}
+	claims := middleware.ExtractClaim(e)
+	userId := int(claims["id"].(float64))
+	role := claims["role"]
+	if role != "user" {
+		return e.JSON(http.StatusForbidden, map[string]interface{}{
+			"message": "role not allowed to update user data",
+		})
+	}
+
+	userData.ID = userId
+
+	err = uh.userService.UpdateUser(userData.ToUserCore())
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": err.Error(),
+		})
+	}
+
+	return e.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Success",
 	})
 
 }

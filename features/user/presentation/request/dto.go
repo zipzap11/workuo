@@ -6,6 +6,7 @@ import (
 )
 
 type UserRequest struct {
+	ID          int                 `json: "id"`
 	Name        string              `json: "name"`
 	Address     string              `json: "address"`
 	Dob         time.Time           `json: "dob"`
@@ -19,11 +20,13 @@ type UserRequest struct {
 }
 
 type SkillsetRequest struct {
+	ID       int    `json: "id"`
 	Name     string `json: "name"`
 	Category string `json: "category"`
 }
 
 type ExperienceRequest struct {
+	ID          int       `json: "id"`
 	Title       string    `json: "title"`
 	Description string    `json: "description"`
 	StartDate   time.Time `json: "startDate"`
@@ -49,6 +52,7 @@ func (data *UserAuth) ToUserCore() user.UserCore {
 
 func (sr *SkillsetRequest) toSkillsetCore() user.SkillsetCore {
 	return user.SkillsetCore{
+		Id:       uint(sr.ID),
 		Name:     sr.Name,
 		Category: sr.Category,
 	}
@@ -65,6 +69,7 @@ func ToSkillsetsCore(srs []SkillsetRequest) []user.SkillsetCore {
 
 func (ec *ExperienceRequest) toExperienceCore() user.ExperienceCore {
 	return user.ExperienceCore{
+		Id:          uint(ec.ID),
 		Title:       ec.Title,
 		Description: ec.Description,
 		StartDate:   ec.StartDate,
@@ -83,6 +88,7 @@ func toExperiencesCore(ex []ExperienceRequest) []user.ExperienceCore {
 
 func (requestData *UserRequest) ToUserCore() user.UserCore {
 	return user.UserCore{
+		Id:          uint(requestData.ID),
 		Name:        requestData.Name,
 		Address:     requestData.Address,
 		Dob:         requestData.Dob,
