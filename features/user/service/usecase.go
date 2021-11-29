@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+	"fmt"
 	"workuo/features/user"
 	"workuo/middleware"
 )
@@ -14,10 +16,37 @@ func NewUserService(userRepository user.Repository) user.Service {
 }
 
 func (us *userService) RegisterUser(data user.UserCore) error {
-	err := us.userRepository.InsertData(data)
-
+	isExist, err := us.userRepository.GetUserByEmail(data.Email)
 	if err != nil {
 		return err
+	}
+	if isExist {
+		msg := fmt.Sprintf("email %v already in used", data.Email)
+		return errors.New(msg)
+	}
+
+	userId, err := us.userRepository.InsertUserData(data)
+	if err != nil {
+		return err
+	}
+
+	for _, skill := range data.Skillsets {
+		skillId, err := us.userRepository.CreateSkillset(skill)
+		if err != nil {
+			return err
+		}
+		err = us.userRepository.AddUserSkillset(userId, skillId)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, exp := range data.Experiences {
+		exp.UserId = uint(userId)
+		err := us.userRepository.CreateExperience(exp)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
