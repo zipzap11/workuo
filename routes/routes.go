@@ -54,5 +54,8 @@ func New() *echo.Echo {
 	jwt.PUT("/applications/reject", presenter.ApplicationPresentation.RejectApplicationHandler)
 	jwt.PUT("/applications/accept", presenter.ApplicationPresentation.AcceptApplication)
 
+	// news
+	jwt.GET("/news", presenter.NewsPresentation.GetNewsHandler)
+
 	return e
 }
