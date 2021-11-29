@@ -6,6 +6,7 @@ import (
 	"workuo/features/job"
 	"workuo/features/job/presentation/request"
 	"workuo/features/job/presentation/response"
+	"workuo/middleware"
 
 	"github.com/labstack/echo/v4"
 )
@@ -21,15 +22,22 @@ func NewJobHandler(js job.Service) *JobHandler {
 func (jh *JobHandler) CreateJobPostHandler(e echo.Context) error {
 	payloadData := request.Job{}
 	err := e.Bind(&payloadData)
-
 	if err != nil {
 		return e.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": err.Error(),
 		})
 	}
 
-	err = jh.jobService.CreateJobPost(payloadData.ToCore())
+	claims := middleware.ExtractClaim(e)
+	role := claims["role"].(string)
+	if role != "recruiter" {
+		return response.NewErrorResponse(e, "user not allowed to create job post", http.StatusForbidden)
+	}
 
+	recId := claims["id"].(float64)
+	payloadData.RecruiterId = int(recId)
+
+	err = jh.jobService.CreateJobPost(payloadData.ToCore())
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": err.Error(),
@@ -69,19 +77,18 @@ func (jh *JobHandler) GetJobPostByIdHandler(e echo.Context) error {
 	return response.NewSuccessResponse(e, "success", response.ToJobResponse(data))
 }
 
-
 func (jh *JobHandler) DeleteJobPostHandler(e echo.Context) error {
 	id, err := strconv.Atoi(e.Param("id"))
-  if err != nil {
+	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
 	}
-  
-  err = jh.jobService.DeleteJobPost(job.JobCore{ID: id})
-  if err != nil {
+
+	err = jh.jobService.DeleteJobPost(job.JobCore{ID: id})
+	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
 	}
-  
-  return response.NewSuccessResponse(e, "success", nil)
+
+	return response.NewSuccessResponse(e, "success", nil)
 }
 
 func (jh *JobHandler) UpdateJobPostHandler(e echo.Context) error {
@@ -91,8 +98,8 @@ func (jh *JobHandler) UpdateJobPostHandler(e echo.Context) error {
 	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
 	}
-  
-  err = jh.jobService.UpdateJobPost(payloadData.ToCore())
+
+	err = jh.jobService.UpdateJobPost(payloadData.ToCore())
 	if err != nil {
 		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
 	}
