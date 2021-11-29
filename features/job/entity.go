@@ -27,9 +27,6 @@ type Service interface {
 	GetJobPostById(id int) (JobCore, error)
 	DeleteJobPost(data JobCore) (err error)
 	UpdateJobPost(data JobCore) error
-	// UpdateJobPost(data JobCore) (resp JobCore, err error)
-	// GetJobPostByTitle(title string) (resp []JobCore, err error)
-	// GetJobPostByCompanyName(company string) (resp []JobCore, err error)
 }
 
 type Data interface {
@@ -38,9 +35,4 @@ type Data interface {
 	GetJobDataById(id int) (JobCore, error)
 	DeleteJobData(data JobCore) error
 	UpdateJobData(data JobCore) error
-	// SelectAllData() (resp []JobCore, err error)
-	// UpdatedData(data JobCore) (resp JobCore, err error)
-	// DeleteData(id int) (err error)
-	// SelectDataByTitle(title string) (resp []JobCore, err error)
-	// SelectDataByCompany(company string) (resp []JobCore, err error)
 }
