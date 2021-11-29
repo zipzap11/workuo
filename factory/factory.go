@@ -26,6 +26,11 @@ import (
 	invitationData "workuo/features/invitation/data"
 	invitationPresent "workuo/features/invitation/presentation"
 	invitationService "workuo/features/invitation/service"
+
+	// invitation domain
+	newsData "workuo/features/news/data"
+	newsPresent "workuo/features/news/presentation"
+	newsService "workuo/features/news/service"
 )
 
 type jobPresenter struct {
@@ -34,6 +39,7 @@ type jobPresenter struct {
 	RecruiterPresentation   recruiterPresent.RecruiterHandler
 	ApplicationPresentation applicationPresent.AppHandler
 	InvitationPresentation  invitationPresent.InvitationHandler
+	NewsPresentation        newsPresent.NewsHandler
 }
 
 func Init() jobPresenter {
@@ -57,11 +63,16 @@ func Init() jobPresenter {
 	invData := invitationData.NewInvitationRepository(driver.DB)
 	invService := invitationService.NewInvitationService(invData, jobService, userService, appService)
 
+	// news 3rd party api layer
+	newsData := newsData.NewNewsApiRepository("http://api.mediastack.com/v1/news", "766a95e2129726c4306bdf9a3745c8b6")
+	newsService := newsService.NewApiService(newsData)
+
 	return jobPresenter{
 		JobPresentation:         *jobPresent.NewJobHandler(jobService),
 		UserPresentation:        *userPresent.NewUserHandler(userService),
 		RecruiterPresentation:   *recruiterPresent.NewRecruiterHandler(recruiterService),
 		ApplicationPresentation: *applicationPresent.NewAppHandler(appService),
 		InvitationPresentation:  *invitationPresent.NewInvitationHandler(invService),
+		NewsPresentation:        *newsPresent.NewNewsHandler(newsService),
 	}
 }
