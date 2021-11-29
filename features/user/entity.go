@@ -46,7 +46,7 @@ type Service interface {
 }
 
 type Repository interface {
-	InsertData(data UserCore) (err error)
+	InsertUserData(data UserCore) (id int, err error)
 	CheckUser(data UserCore) (user UserCore, err error)
 	GetData(UserCore) (user []UserCore, err error)
 	GetDataById(id int) (user UserCore, err error)
@@ -59,4 +59,5 @@ type Repository interface {
 	DeleteUserSkillset(userId int, skillsetId int) error
 	GetUserSkillsets(data UserCore) ([]UserSkillsetCore, error)
 	AddUserSkillset(userId int, skillsetId int) error
+	GetUserByEmail(email string) (bool, error)
 }
