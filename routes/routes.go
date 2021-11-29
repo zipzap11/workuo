@@ -30,6 +30,7 @@ func New() *echo.Echo {
 	jwt.GET("/users/:id", presenter.UserPresentation.GetUserByIdHandler)
 	e.POST("/users/register", presenter.UserPresentation.RegisterUserHandler)
 	e.POST("/users/login", presenter.UserPresentation.LoginUserHandler)
+	jwt.PUT("/users", presenter.UserPresentation.UpdateUserHandler)
 
 	// recruiter
 	e.POST("/recruiters/register", presenter.RecruiterPresentation.RegisterRecruiterHandler)
