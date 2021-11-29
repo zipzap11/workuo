@@ -15,15 +15,16 @@ func NewMysqlUserRepository(DB *gorm.DB) user.Repository {
 	return &mysqlUserRepository{DB}
 }
 
-func (mr *mysqlUserRepository) InsertData(data user.UserCore) error {
-	recordData := toUserRecord(data)
-	err := mr.DB.Create(&recordData)
+func (mr *mysqlUserRepository) InsertUserData(data user.UserCore) (int, error) {
+	// recordData := toUserRecord(data)
+	userData, _, _ := SeparateUserData(data)
+	err := mr.DB.Create(&userData).Error
 
 	if err != nil {
-		return err.Error
+		return 0, err
 	}
 
-	return nil
+	return int(userData.ID), nil
 }
 
 func (mr *mysqlUserRepository) CheckUser(data user.UserCore) (user.UserCore, error) {
@@ -175,4 +176,16 @@ func (mr *mysqlUserRepository) GetUserSkillsets(data user.UserCore) ([]user.User
 		return nil, err
 	}
 	return ToUserSkillsetCore(userSkillsets), nil
+}
+
+func (mr *mysqlUserRepository) GetUserByEmail(email string) (bool, error) {
+	var userModel User
+	err := mr.DB.Where("email = ?", email).Find(&userModel).Error
+	if err != nil {
+		return false, err
+	}
+	if userModel.ID != 0 {
+		return true, nil
+	}
+	return false, nil
 }
