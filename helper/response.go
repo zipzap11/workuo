@@ -8,9 +8,9 @@ import (
 
 type BaseReponse struct {
 	Meta struct {
-		Status   int      `json:"status"`
-		Message  string   `json:"message"`
-		Messages []string `json:"messages"`
+		Status      int      `json:"status"`
+		Message     string   `json:"message"`
+		Description []string `json:"description"`
 	} `json:"meta"`
 	Data interface{} `json:"data"`
 }
@@ -26,7 +26,7 @@ func SuccessResponse(c echo.Context, data interface{}) error {
 func ErrorResponse(c echo.Context, status int, err string, errs error) error {
 	response := BaseReponse{}
 	response.Meta.Status = status
-	response.Meta.Messages = []string{errs.Error()}
+	response.Meta.Description = []string{errs.Error()}
 	response.Meta.Message = err
 	return c.JSON(status, response)
 }
