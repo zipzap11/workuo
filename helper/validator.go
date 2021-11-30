@@ -14,7 +14,7 @@ func ValidateEmail(email string) bool {
 
 func ValidatePassword(password string) bool {
 	length := len(password)
-	if length < 6 && length > 100 {
+	if length < 6 || length > 100 {
 		return false
 	}
 
