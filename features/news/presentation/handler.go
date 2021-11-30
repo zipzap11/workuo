@@ -3,6 +3,7 @@ package presentation
 import (
 	"net/http"
 	"workuo/features/news"
+	"workuo/helper"
 
 	"github.com/labstack/echo/v4"
 )
@@ -18,11 +19,8 @@ func NewNewsHandler(ns news.Service) *NewsHandler {
 func (ns *NewsHandler) GetNewsHandler(e echo.Context) error {
 	data, err := ns.newsService.GetNews()
 	if err != nil {
-		return err
+		return helper.ErrorResponse(e, http.StatusInternalServerError, "something went wrong", nil)
 	}
 
-	return e.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success",
-		"data":    data,
-	})
+	return helper.SuccessResponse(e, data)
 }
