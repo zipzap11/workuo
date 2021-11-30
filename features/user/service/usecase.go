@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"workuo/features/user"
+	"workuo/helper"
 	"workuo/middleware"
 )
 
@@ -16,6 +17,15 @@ func NewUserService(userRepository user.Repository) user.Service {
 }
 
 func (us *userService) RegisterUser(data user.UserCore) error {
+	fmt.Println(helper.ValidateEmail(data.Email))
+	fmt.Println(helper.ValidatePassword(data.Password))
+	fmt.Println(len(data.Name) == 0)
+	fmt.Println(len(data.Address) == 0)
+	fmt.Println(data)
+	if !helper.ValidateEmail(data.Email) || !helper.ValidatePassword(data.Password) || len(data.Address) == 0 || len(data.Name) == 0 {
+		return errors.New("incomplete or invalid data")
+	}
+
 	isExist, err := us.userRepository.GetUserByEmail(data.Email)
 	if err != nil {
 		return err
