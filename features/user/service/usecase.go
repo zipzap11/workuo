@@ -17,11 +17,6 @@ func NewUserService(userRepository user.Repository) user.Service {
 }
 
 func (us *userService) RegisterUser(data user.UserCore) error {
-	fmt.Println(helper.ValidateEmail(data.Email))
-	fmt.Println(helper.ValidatePassword(data.Password))
-	fmt.Println(len(data.Name) == 0)
-	fmt.Println(len(data.Address) == 0)
-	fmt.Println(data)
 	if !helper.ValidateEmail(data.Email) || !helper.ValidatePassword(data.Password) || len(data.Address) == 0 || len(data.Name) == 0 {
 		return errors.New("incomplete or invalid data")
 	}
@@ -72,6 +67,9 @@ func (us *userService) GetUsers(data user.UserCore) ([]user.UserCore, error) {
 }
 
 func (us *userService) LoginUser(data user.UserCore) (user.UserCore, error) {
+	if helper.ValidateEmail(data.Email) || helper.ValidatePassword(data.Password) {
+		return user.UserCore{}, errors.New("invalid data")
+	}
 	userData, err := us.userRepository.CheckUser(data)
 	if err != nil {
 		return user.UserCore{}, err
