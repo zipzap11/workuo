@@ -28,7 +28,7 @@ func (rs *recruiterService) RegisterRecruiter(data recruiter.RecruiterCore) erro
 }
 
 func (rs *recruiterService) LoginRecruiter(data recruiter.RecruiterCore) (recruiter.RecruiterCore, error) {
-	if helper.ValidateEmail(data.Email) || helper.ValidatePassword(data.Password) {
+	if !helper.ValidateEmail(data.Email) || !helper.ValidatePassword(data.Password) {
 		return recruiter.RecruiterCore{}, errors.New("invalid data")
 	}
 	data, err := rs.recruiterRepository.CheckRecruiter(data)
