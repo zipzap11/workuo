@@ -10,8 +10,8 @@ func NewApiService(nr news.Repository) news.Service {
 	return &ApiService{nr}
 }
 
-func (as *ApiService) GetNews() ([]news.NewsCore, error) {
-	data, err := as.newsRepository.GetData()
+func (as *ApiService) GetNews(keyword string) ([]news.NewsCore, error) {
+	data, err := as.newsRepository.GetData(keyword)
 	if err != nil {
 		return nil, err
 	}
