@@ -17,7 +17,8 @@ func NewNewsHandler(ns news.Service) *NewsHandler {
 }
 
 func (ns *NewsHandler) GetNewsHandler(e echo.Context) error {
-	data, err := ns.newsService.GetNews()
+	keyword := e.QueryParam("keyword")
+	data, err := ns.newsService.GetNews(keyword)
 	if err != nil {
 		return helper.ErrorResponse(e, http.StatusInternalServerError, "something went wrong", nil)
 	}

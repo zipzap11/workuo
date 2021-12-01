@@ -21,8 +21,8 @@ func NewNewsApiRepository(url string, key string) news.Repository {
 	}
 }
 
-func (nr *NewsApi) GetData() ([]news.NewsCore, error) {
-	url := fmt.Sprintf("%v?access_key=%v&languages=en", nr.URL, nr.Key)
+func (nr *NewsApi) GetData(keyword string) ([]news.NewsCore, error) {
+	url := fmt.Sprintf("%v?access_key=%v&languages=en&keyword=%v", nr.URL, nr.Key, keyword)
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
