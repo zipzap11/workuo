@@ -21,6 +21,7 @@ var (
 	appServ       application.Service
 	appRepository app_m.Repository
 	userService   user_m.Service
+	appMockServ   app_m.Service
 	jobService    job_m.Service
 	jobData       job.JobCore
 	appData       application.ApplicationCore
@@ -222,6 +223,17 @@ func TestGetApplicationByUserID(t *testing.T) {
 
 func TestRejectApplication(t *testing.T) {
 	t.Run("reject application success", func(t *testing.T) {
+		jobData.RecruiterId = 1
+		appMockServ.On("GetApplicationByID", mock.AnythingOfType("int")).
+			Return(application.ApplicationCore{
+				ID:     1,
+				UserID: 1,
+				Status: "pending",
+				Job: application.JobCore{
+					ID:          1,
+					RecruiterId: 1,
+				},
+			}, nil).Once()
 		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).
 			Return(application.ApplicationCore{
 				ID:     1,
@@ -232,7 +244,8 @@ func TestRejectApplication(t *testing.T) {
 					RecruiterId: 1,
 				},
 			}, nil).Once()
-
+		userService.On("GetUserById", mock.AnythingOfType("int")).Return(userData, nil).Once()
+		jobService.On("GetJobPostById", mock.AnythingOfType("int")).Return(jobData, nil).Once()
 		appRepository.On("RejectApplication", mock.AnythingOfType("int")).Return(nil).Once()
 
 		err := appServ.RejectApplication(1, 1)
@@ -240,16 +253,17 @@ func TestRejectApplication(t *testing.T) {
 	})
 
 	t.Run("reject application error GetApplicationByID", func(t *testing.T) {
+		appMockServ.On("GetApplicationByID", mock.AnythingOfType("int")).
+			Return(application.ApplicationCore{}, errors.New("error")).Once()
 		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).
 			Return(application.ApplicationCore{}, errors.New("error")).Once()
-
 		err := appServ.RejectApplication(1, 1)
 		assert.NotNil(t, err)
 		assert.Equal(t, "application with id 1 not found", err.Error())
 	})
 
 	t.Run("reject application error no match recruiter id", func(t *testing.T) {
-		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).
+		appMockServ.On("GetApplicationByID", mock.AnythingOfType("int")).
 			Return(application.ApplicationCore{
 				ID:     1,
 				UserID: 1,
@@ -259,14 +273,160 @@ func TestRejectApplication(t *testing.T) {
 					RecruiterId: 2,
 				},
 			}, nil).Once()
-
-		err := appServ.RejectApplication(1, 1)
-		msg := fmt.Sprintf("recruiter with id %v not allowed to access post with id %v", 1, 1)
+		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).
+			Return(application.ApplicationCore{
+				ID:     1,
+				UserID: 1,
+				Status: "pending",
+				Job: application.JobCore{
+					ID:          1,
+					RecruiterId: 1,
+				},
+			}, nil).Once()
+		userService.On("GetUserById", mock.AnythingOfType("int")).Return(userData, nil).Once()
+		jobService.On("GetJobPostById", mock.AnythingOfType("int")).Return(jobData, nil).Once()
+		err := appServ.RejectApplication(1, 2)
+		msg := fmt.Sprintf("recruiter with id %v not allowed to access post with id %v", 2, 1)
 		assert.NotNil(t, err)
 		assert.Equal(t, msg, err.Error())
 	})
 
 	t.Run("reject application error already rejected or accepted", func(t *testing.T) {
+		appMockServ.On("GetApplicationByID", mock.AnythingOfType("int")).
+			Return(application.ApplicationCore{
+				ID:     1,
+				UserID: 1,
+				Status: "accepted",
+				Job: application.JobCore{
+					ID:          1,
+					RecruiterId: 1,
+				},
+			}, nil).Once()
+		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).
+			Return(application.ApplicationCore{
+				ID:     1,
+				UserID: 1,
+				Status: "rejected",
+				Job: application.JobCore{
+					ID:          1,
+					RecruiterId: 1,
+				},
+			}, nil).Once()
+		userService.On("GetUserById", mock.AnythingOfType("int")).Return(userData, nil).Once()
+		jobService.On("GetJobPostById", mock.AnythingOfType("int")).Return(jobData, nil).Once()
+		err := appServ.RejectApplication(1, 1)
+		msg := fmt.Sprintf("this user has been %v", "rejected")
+		assert.NotNil(t, err)
+		assert.Equal(t, msg, err.Error())
+	})
+
+	t.Run("reject application error RejectApplication", func(t *testing.T) {
+		appMockServ.On("GetApplicationByID", mock.AnythingOfType("int")).Return(application.ApplicationCore{
+			ID:     1,
+			UserID: 1,
+			JobID:  1,
+			Status: "pending",
+			Job: application.JobCore{
+				ID:          1,
+				RecruiterId: 1,
+			},
+		}, nil).Once()
+		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).
+			Return(application.ApplicationCore{
+				ID:     1,
+				UserID: 1,
+				Status: "rejected",
+				Job: application.JobCore{
+					ID:          1,
+					RecruiterId: 1,
+				},
+			}, nil).Once()
+		userService.On("GetUserById", mock.AnythingOfType("int")).Return(userData, nil).Once()
+		jobService.On("GetJobPostById", mock.AnythingOfType("int")).Return(jobData, nil).Once()
+		appRepository.On("RejectApplication", mock.AnythingOfType("int")).Return(errors.New("error reject application")).Once()
+		err := appServ.RejectApplication(1, 1)
+		assert.NotNil(t, err)
+	})
+
+}
+
+func TestAcceptApplication(t *testing.T) {
+	t.Run("accept application success", func(t *testing.T) {
+		jobData.RecruiterId = 1
+		appMockServ.On("GetApplicationByID", mock.AnythingOfType("int")).Return(application.ApplicationCore{
+			ID:     1,
+			UserID: 1,
+			JobID:  1,
+			Job: application.JobCore{
+				RecruiterId: 1,
+			},
+			Status: "pending",
+		}, nil).Once()
+		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).
+			Return(application.ApplicationCore{
+				ID:     1,
+				UserID: 1,
+				Status: "pending",
+				Job: application.JobCore{
+					ID:          1,
+					RecruiterId: 1,
+				},
+			}, nil).Once()
+		userService.On("GetUserById", mock.AnythingOfType("int")).Return(userData, nil).Once()
+		jobService.On("GetJobPostById", mock.AnythingOfType("int")).Return(jobData, nil).Once()
+		appRepository.On("AcceptApplication", mock.AnythingOfType("int")).Return(nil).Once()
+
+		err := appServ.AcceptApplication(1, 1)
+		assert.Nil(t, err)
+	})
+
+	t.Run("accept application error GetAPplicationByID", func(t *testing.T) {
+		appMockServ.On("GetApplicationByID", mock.AnythingOfType("int")).Return(application.ApplicationCore{}, errors.New("error get appliaction")).Once()
+		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).
+			Return(application.ApplicationCore{}, errors.New("error")).Once()
+		err := appServ.AcceptApplication(1, 1)
+		assert.NotNil(t, err)
+		assert.Equal(t, "application with id 1 not found", err.Error())
+	})
+
+	t.Run("accept application error recruiter id not match", func(t *testing.T) {
+		appMockServ.On("GetApplicationByID", mock.AnythingOfType("int")).Return(application.ApplicationCore{
+			ID:     1,
+			UserID: 1,
+			JobID:  1,
+			Job: application.JobCore{
+				RecruiterId: 1,
+			},
+			Status: "pending",
+		}, nil).Once()
+		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).
+			Return(application.ApplicationCore{
+				ID:     1,
+				UserID: 1,
+				Status: "pending",
+				Job: application.JobCore{
+					ID:          1,
+					RecruiterId: 1,
+				},
+			}, nil).Once()
+		userService.On("GetUserById", mock.AnythingOfType("int")).Return(userData, nil).Once()
+		jobService.On("GetJobPostById", mock.AnythingOfType("int")).Return(jobData, nil).Once()
+		err := appServ.AcceptApplication(1, 2)
+		assert.NotNil(t, err)
+		msg := fmt.Sprintf("recruiter with id %v not allowed to access application with id %v", 2, 1)
+		assert.Equal(t, msg, err.Error())
+	})
+
+	t.Run("accept application error application accepted/rejected", func(t *testing.T) {
+		appMockServ.On("GetApplicationByID", mock.AnythingOfType("int")).Return(application.ApplicationCore{
+			ID:     1,
+			UserID: 1,
+			JobID:  1,
+			Job: application.JobCore{
+				RecruiterId: 1,
+			},
+			Status: "accepted",
+		}, nil).Once()
 		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).
 			Return(application.ApplicationCore{
 				ID:     1,
@@ -277,83 +437,8 @@ func TestRejectApplication(t *testing.T) {
 					RecruiterId: 1,
 				},
 			}, nil).Once()
-
-		err := appServ.RejectApplication(1, 1)
-		msg := fmt.Sprintf("this user has been %v", "accepted")
-		assert.NotNil(t, err)
-		assert.Equal(t, msg, err.Error())
-	})
-
-	t.Run("reject application error RejectApplication", func(t *testing.T) {
-		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).Return(application.ApplicationCore{
-			ID:     1,
-			UserID: 1,
-			JobID:  1,
-			Status: "pending",
-			Job: application.JobCore{
-				ID:          1,
-				RecruiterId: 1,
-			},
-		}, nil).Once()
-		appRepository.On("RejectApplication", mock.AnythingOfType("int")).Return(errors.New("error reject application")).Once()
-		err := appServ.RejectApplication(1, 1)
-		assert.NotNil(t, err)
-	})
-
-}
-
-func TestAcceptApplication(t *testing.T) {
-	t.Run("accept application success", func(t *testing.T) {
-		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).Return(application.ApplicationCore{
-			ID:     1,
-			UserID: 1,
-			JobID:  1,
-			Job: application.JobCore{
-				RecruiterId: 1,
-			},
-			Status: "pending",
-		}, nil).Once()
-
-		appRepository.On("AcceptApplication", mock.AnythingOfType("int")).Return(nil).Once()
-
-		err := appServ.AcceptApplication(1, 1)
-		assert.Nil(t, err)
-	})
-
-	t.Run("accept application error GetAPplicationByID", func(t *testing.T) {
-		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).Return(application.ApplicationCore{}, errors.New("error get appliaction")).Once()
-		err := appServ.AcceptApplication(1, 1)
-		assert.NotNil(t, err)
-		assert.Equal(t, "application with id 1 not found", err.Error())
-	})
-
-	t.Run("accept application error recruiter id not match", func(t *testing.T) {
-		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).Return(application.ApplicationCore{
-			ID:     1,
-			UserID: 1,
-			JobID:  1,
-			Job: application.JobCore{
-				RecruiterId: 1,
-			},
-			Status: "pending",
-		}, nil).Once()
-		err := appServ.AcceptApplication(1, 2)
-		assert.NotNil(t, err)
-		msg := fmt.Sprintf("recruiter with id %v not allowed to access post with id %v", 2, 1)
-		assert.Equal(t, msg, err.Error())
-	})
-
-	t.Run("accept application error application accepted/rejected", func(t *testing.T) {
-		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).Return(application.ApplicationCore{
-			ID:     1,
-			UserID: 1,
-			JobID:  1,
-			Job: application.JobCore{
-				RecruiterId: 1,
-			},
-			Status: "accepted",
-		}, nil).Once()
-
+		userService.On("GetUserById", mock.AnythingOfType("int")).Return(userData, nil).Once()
+		jobService.On("GetJobPostById", mock.AnythingOfType("int")).Return(jobData, nil).Once()
 		err := appServ.AcceptApplication(1, 1)
 		assert.NotNil(t, err)
 		msg := fmt.Sprintf("this user has been %v", "accepted")
@@ -361,7 +446,7 @@ func TestAcceptApplication(t *testing.T) {
 	})
 
 	t.Run("accept application error acceptApplication", func(t *testing.T) {
-		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).Return(application.ApplicationCore{
+		appMockServ.On("GetApplicationByID", mock.AnythingOfType("int")).Return(application.ApplicationCore{
 			ID:     1,
 			UserID: 1,
 			JobID:  1,
@@ -370,7 +455,18 @@ func TestAcceptApplication(t *testing.T) {
 			},
 			Status: "pending",
 		}, nil).Once()
-
+		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).
+			Return(application.ApplicationCore{
+				ID:     1,
+				UserID: 1,
+				Status: "accepted",
+				Job: application.JobCore{
+					ID:          1,
+					RecruiterId: 1,
+				},
+			}, nil).Once()
+		userService.On("GetUserById", mock.AnythingOfType("int")).Return(userData, nil).Once()
+		jobService.On("GetJobPostById", mock.AnythingOfType("int")).Return(jobData, nil).Once()
 		appRepository.On("AcceptApplication", mock.AnythingOfType("int")).Return(errors.New("error accept application")).Once()
 
 		err := appServ.AcceptApplication(1, 1)
@@ -379,14 +475,14 @@ func TestAcceptApplication(t *testing.T) {
 }
 
 func TestGetApplicationByID(t *testing.T) {
-	t.Run("get application by id success", func(t *testing.T) {
+	t.Run("get application by id ", func(t *testing.T) {
 		appRepository.On("GetApplicationByID", mock.AnythingOfType("int")).Return(appData, nil).Once()
 		userService.On("GetUserById", mock.AnythingOfType("int")).Return(userData, nil).Once()
 		jobService.On("GetJobPostById", mock.AnythingOfType("int")).Return(jobData, nil).Once()
 		resp, err := appServ.GetApplicationByID(1)
 		assert.Nil(t, err)
 		assert.Equal(t, appData.ID, resp.ID)
-		assert.Equal(t, appData.Job.RecruiterId, resp.Job.RecruiterId)
+		assert.Equal(t, 1, resp.Job.RecruiterId)
 		assert.Equal(t, appData.User.ID, resp.User.ID)
 	})
 
