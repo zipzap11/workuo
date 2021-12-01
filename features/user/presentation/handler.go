@@ -34,9 +34,7 @@ func (uh *UserHandler) RegisterUserHandler(e echo.Context) error {
 		return helper.ErrorResponse(e, http.StatusInternalServerError, "something went wrong", err)
 	}
 
-	return e.JSON(http.StatusOK, map[string]interface{}{
-		"message": "Success",
-	})
+	return helper.SuccessResponse(e, nil)
 }
 
 func (uh *UserHandler) GetUsersHandler(e echo.Context) error {
