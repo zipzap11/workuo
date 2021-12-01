@@ -18,11 +18,13 @@ type UserResponse struct {
 }
 
 type SkillsetResponse struct {
+	Id       int    `json: "id"`
 	Name     string `json: "name"`
 	Category string `json: "category"`
 }
 
 type ExperienceResponse struct {
+	Id          int       `json: "id"`
 	Title       string    `json: "title"`
 	Description string    `json: "description"`
 	StartDate   time.Time `json: "startDate"`
@@ -38,6 +40,7 @@ type UserLoginResponse struct {
 
 func toSkillsetResponse(skill user.SkillsetCore) SkillsetResponse {
 	return SkillsetResponse{
+		Id:       int(skill.Id),
 		Name:     skill.Name,
 		Category: skill.Category,
 	}
@@ -55,6 +58,7 @@ func toSkillsetResponseList(skillList []user.SkillsetCore) []SkillsetResponse {
 
 func toExperienceResponse(experience user.ExperienceCore) ExperienceResponse {
 	return ExperienceResponse{
+		Id:          int(experience.Id),
 		Title:       experience.Title,
 		Description: experience.Description,
 		StartDate:   experience.StartDate,
