@@ -67,7 +67,7 @@ func (us *userService) GetUsers(data user.UserCore) ([]user.UserCore, error) {
 }
 
 func (us *userService) LoginUser(data user.UserCore) (user.UserCore, error) {
-	if helper.ValidateEmail(data.Email) || helper.ValidatePassword(data.Password) {
+	if !helper.ValidateEmail(data.Email) || !helper.ValidatePassword(data.Password) {
 		return user.UserCore{}, errors.New("invalid data")
 	}
 	userData, err := us.userRepository.CheckUser(data)
