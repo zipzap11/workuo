@@ -29,7 +29,7 @@ type Service interface {
 	UpdateJobPost(data JobCore) error
 }
 
-type Data interface {
+type Repository interface {
 	InsertData(data JobCore) (err error)
 	GetJobData(data JobCore) ([]JobCore, error)
 	GetJobDataById(id int) (JobCore, error)
