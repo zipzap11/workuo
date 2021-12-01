@@ -49,7 +49,7 @@ func New() *echo.Echo {
 	// application
 	jwt.POST("/applications", presenter.ApplicationPresentation.ApplyJobHandler)
 	jwt.GET("/applications/:id", presenter.ApplicationPresentation.GetApplicationByIDHandler)
-	jwt.GET("/applications/users/:id", presenter.ApplicationPresentation.GetApplicationByUserIdHandler)
+	jwt.GET("/applications/users", presenter.ApplicationPresentation.GetApplicationByUserIdHandler)
 	jwt.GET("/applications/jobs/:id", presenter.ApplicationPresentation.GetApplicationByJobIDHandler)
 	jwt.PUT("/applications/reject", presenter.ApplicationPresentation.RejectApplicationHandler)
 	jwt.PUT("/applications/accept", presenter.ApplicationPresentation.AcceptApplication)
