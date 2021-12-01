@@ -3,22 +3,23 @@ name: CI-Test
 on:
   push:
     branch: 
-      - master
+      - 'master'
   merge:
     branch:
-      - master
+      - 'master'
   pull_request:
     branch:
-      - master
+      - 'master'
   push:
     branch:
-      - development
+      - 'development'
   merge:
     branch:
-      - development
+      - 'development'
 jobs:
 
-  build:
+  unit-test:
+    name: "unit-test"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
