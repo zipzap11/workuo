@@ -16,9 +16,9 @@ type NewsCore struct {
 }
 
 type Service interface {
-	GetNews() ([]NewsCore, error)
+	GetNews(keyword string) ([]NewsCore, error)
 }
 
 type Repository interface {
-	GetData() ([]NewsCore, error)
+	GetData(keyword string) ([]NewsCore, error)
 }
