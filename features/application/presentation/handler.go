@@ -45,12 +45,14 @@ func (ah *AppHandler) ApplyJobHandler(e echo.Context) error {
 }
 
 func (ah *AppHandler) GetApplicationByUserIdHandler(e echo.Context) error {
-	id, err := strconv.Atoi(e.Param("id"))
-	if err != nil {
-		return helper.ErrorResponse(e, http.StatusBadRequest, "invalid id parameter", err)
+	claims := middleware.ExtractClaim(e)
+	userId := int(claims["id"].(float64))
+	role := claims["role"].(string)
+	if role != "user" {
+		return helper.ErrorResponse(e, http.StatusForbidden, "role not allowed to get data", errors.New("forbidden"))
 	}
 
-	applications, err := ah.appService.GetApplicationByUserID(id)
+	applications, err := ah.appService.GetApplicationByUserID(userId)
 	if err != nil {
 		return helper.ErrorResponse(e, http.StatusInternalServerError, "Something went wrong", err)
 	}
@@ -76,7 +78,7 @@ func (ah *AppHandler) RejectApplicationHandler(e echo.Context) error {
 		return helper.ErrorResponse(e, http.StatusInternalServerError, "something went wrong", err)
 	}
 
-	return response.NewSuccessResponse(e, "success", nil)
+	return helper.SuccessResponse(e, nil)
 }
 
 func (ah *AppHandler) AcceptApplication(e echo.Context) error {

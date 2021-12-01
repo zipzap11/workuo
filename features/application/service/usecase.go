@@ -69,7 +69,7 @@ func (ar *appService) GetApplicationByUserID(id int) ([]application.ApplicationC
 }
 
 func (ar *appService) RejectApplication(id int, recruiterId int) error {
-	data, err := ar.appRepository.GetApplicationByID(id)
+	data, err := ar.GetApplicationByID(id)
 	if err != nil {
 		msg := fmt.Sprintf("application with id %v not found", id)
 		return errors.New(msg)
@@ -92,13 +92,13 @@ func (ar *appService) RejectApplication(id int, recruiterId int) error {
 }
 
 func (ar *appService) AcceptApplication(id int, recruiterId int) error {
-	data, err := ar.appRepository.GetApplicationByID(id)
+	data, err := ar.GetApplicationByID(id)
 	if err != nil {
 		msg := fmt.Sprintf("application with id %v not found", id)
 		return errors.New(msg)
 	}
 	if data.Job.RecruiterId != recruiterId {
-		msg := fmt.Sprintf("recruiter with id %v not allowed to access post with id %v", recruiterId, id)
+		msg := fmt.Sprintf("recruiter with id %v not allowed to access application with id %v", recruiterId, id)
 		return errors.New(msg)
 	}
 	if data.Status != "pending" {
