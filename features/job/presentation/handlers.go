@@ -79,7 +79,14 @@ func (jh *JobHandler) DeleteJobPostHandler(e echo.Context) error {
 		return helper.ErrorResponse(e, http.StatusBadRequest, "invalid id parameter", err)
 	}
 
-	err = jh.jobService.DeleteJobPost(job.JobCore{ID: id})
+	claims := middleware.ExtractClaim(e)
+	recId := claims["id"].(float64)
+	role := claims["role"].(string)
+	if role != "recruiter" {
+		return helper.ErrorResponse(e, http.StatusForbidden, "role not allowed to delete data", errors.New("not allowed"))
+	}
+
+	err = jh.jobService.DeleteJobPost(job.JobCore{ID: id, RecruiterId: int(recId)})
 	if err != nil {
 		return helper.ErrorResponse(e, http.StatusInternalServerError, "something went wrong", err)
 	}
@@ -93,6 +100,14 @@ func (jh *JobHandler) UpdateJobPostHandler(e echo.Context) error {
 	err := e.Bind(&payloadData)
 	if err != nil {
 		return helper.ErrorResponse(e, http.StatusBadRequest, "invalid payload data", err)
+	}
+
+	claims := middleware.ExtractClaim(e)
+
+	payloadData.RecruiterId = int(claims["id"].(float64))
+	role := claims["role"].(string)
+	if role != "recruiter" {
+		return helper.ErrorResponse(e, http.StatusForbidden, "role not allowed to delete data", errors.New("not allowed"))
 	}
 
 	err = jh.jobService.UpdateJobPost(payloadData.ToCore())
