@@ -1,0 +1,32 @@
+name: CI-Test
+
+on:
+  push:
+    branch: 
+      - master
+  merge:
+    branch:
+      - master
+  pull_request:
+    branch:
+      - master
+  push:
+    branch:
+      - development
+  merge:
+    branch:
+      - development
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+    - name: run unit testing
+      run: go test ./... -cover
+      #test
