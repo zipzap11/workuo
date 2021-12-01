@@ -1,6 +1,9 @@
 package helper
 
-import "regexp"
+import (
+	"regexp"
+	"strings"
+)
 
 func ValidateEmail(email string) bool {
 	emailRegex := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
@@ -19,4 +22,8 @@ func ValidatePassword(password string) bool {
 	}
 
 	return true
+}
+
+func IsEmpty(str string) bool {
+	return len(strings.Trim(str, " ")) == 0
 }
