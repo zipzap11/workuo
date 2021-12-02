@@ -16,10 +16,10 @@ func registerEntities() []Entity {
 	return []Entity{
 		{JobModel.Job{}},
 		{JobModel.Requirement{}},
+		{RecruiterModel.Recruiter{}},
 		{UserModel.User{}},
 		{UserModel.Experience{}},
 		{UserModel.Skillset{}},
-		{RecruiterModel.Recruiter{}},
 		{InvitationModel.Invitation{}},
 		{AppModel.Application{}},
 	}

@@ -19,14 +19,14 @@ type Invitation struct {
 }
 
 type Job struct {
-	ID          int
+	ID          uint
 	Title       string
 	Description string
 	RecruiterId int
 }
 
 type User struct {
-	ID      int
+	ID      uint
 	Name    string
 	Dob     time.Time
 	Gender  string
@@ -67,7 +67,7 @@ func ToCoreList(data []Invitation) []invitation.InvitationCore {
 
 func ToJobCore(data Job) invitation.JobCore {
 	return invitation.JobCore{
-		ID:          data.ID,
+		ID:          int(data.ID),
 		RecruiterId: data.RecruiterId,
 		Title:       data.Title,
 		Description: data.Description,
@@ -76,7 +76,7 @@ func ToJobCore(data Job) invitation.JobCore {
 
 func ToUserCore(data User) invitation.UserCore {
 	return invitation.UserCore{
-		ID:      uint(data.ID),
+		ID:      data.ID,
 		Name:    data.Name,
 		Title:   data.Title,
 		Dob:     data.Dob,

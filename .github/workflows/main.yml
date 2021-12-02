@@ -8,6 +8,9 @@ on:
     branches:
       - 'main'
       - 'development'
+  merge:
+    branches:
+      - 'main'
 
 jobs:
   unit-test:
