@@ -37,7 +37,7 @@ jobs:
       - name: push image to dockerhub
         run: docker push zipzap11/workuo:latest
 
-  deployment:
+  deploy-ec2:
     name: "Deploy to EC2"
     runs-on: ubuntu-latest
     needs: build-push-docker
@@ -52,14 +52,14 @@ jobs:
           mkdir -p ~/.ssh/
           echo "$SSH_KEY" > ~/.ssh/workuo.pem
           chmod 700 ~/.ssh/workuo.pem
-          cat >>~/.ssh/config <<END
-          Host development
-            HostName $SSH_HOST
+          cat >> ~/.ssh/config << END
+          Host development 
+            Host_name $SSH_HOST
             User $SSH_USER
             IdentityFile ~/.ssh/workuo.pem
             StrictHostKeyChecking=no
           END
-      - name: Connect EC2 & Remove All Container & Pull from Registry & Start
+      - name: Remove All Container & Pull from Registry & Start
         run: ssh development 'sudo docker rm -f $(docker ps -a -q) && docker pull zipzap11/workuo:latest && docker run -d -p 8080:8080 --name workuo zipzap11/workuo:latest'
 
 
