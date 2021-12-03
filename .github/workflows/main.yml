@@ -55,7 +55,7 @@ jobs:
           cat >> ~/.ssh/config << END
           Host development 
             Host_name $SSH_HOST
-            User $SSH_USER
+            User  $SSH_USER
             IdentityFile ~/.ssh/workuo.pem
             StrictHostKeyChecking=no
           END
