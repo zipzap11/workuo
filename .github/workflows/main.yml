@@ -46,7 +46,7 @@ jobs:
       - name: configurate ssh connection
         env:
           SSH_USER: ${{ secrets.SSH_USERNAME }}
-          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_KEY: ${{ secrets.WORKUO_PEM }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
         run: |
           mkdir -p ~/.ssh/
