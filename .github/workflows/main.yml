@@ -54,12 +54,12 @@ jobs:
           chmod 700 ~/.ssh/workuo.pem
           cat >> ~/.ssh/config << END
           Host development 
-            host_name $SSH_HOST
+            HostName $SSH_HOST
             User $SSH_USER
             IdentityFile ~/.ssh/workuo.pem
             StrictHostKeyChecking=no
           END
       - name: Remove All Container & Pull from Registry & Start
-        run: ssh development 'sudo docker rm -f $(docker ps -a -q) && docker pull zipzap11/workuo:latest && docker run -d -p 8080:8080 --name workuo zipzap11/workuo:latest'
+        run: ssh development 'docker rm -f $(docker ps -a -q) || true && docker pull zipzap11/workuo:latest && docker run -d -p 8080:8080 --name workuo zipzap11/workuo:latest'
 
 
