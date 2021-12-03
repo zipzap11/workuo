@@ -46,19 +46,20 @@ jobs:
       - name: configurate ssh connection
         env:
           SSH_USER: ${{ secrets.SSH_USERNAME }}
-          SSH_KEY: ${{ secrets.WORKUO_PEM }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
         run: |
           mkdir -p ~/.ssh/
           echo "$SSH_KEY" > ~/.ssh/workuo.pem
-          chmod 700 ~/.ssh/workuo.pem
-          cat >> ~/.ssh/config << END
-          Host development 
-            Host_name $SSH_HOST
-            User  $SSH_USER
-            IdentityFile ~/.ssh/workuo.pem
+          chmod 700 ~/.ssh/kampusmerdeka.pem
+          cat >>~/.ssh/config <<END
+          Host development
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/kampusmerdeka.pem
             StrictHostKeyChecking=no
           END
-      - name: Connect EC2, Remove container, Pull from registry, Start app
-        run: ssh development 'docker rm -f $(docker ps -a -q) || true && docker pull zipzap11/workuo:latest && docker run -d -p 8000:8000 --name workuo zipzap11/workuo:latest'
+      - name: Connect EC2 & Remove All Container & Pull from Registry & Start
+        run: ssh development 'sudo docker rm -f $(docker ps -a -q) && docker pull zipzap11/workuo:latest && docker run -d -p 8080:8080 --name workuo zipzap11/workuo:latest'
+
 
