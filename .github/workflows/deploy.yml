@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: add app.env
+        env:
+          APP_ENV: ${{ secrets.APP }}
+        run: echo "$APP" > app.env
       - name: build image
         run: docker build -t zipzap11/workuo:latest .
       - name: login docker hub
