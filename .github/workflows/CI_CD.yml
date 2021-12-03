@@ -5,9 +5,22 @@ on:
       - "master"
       - "development"
 jobs:
+  unit-test:
+    name: "unit test"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17.4
+      - name: running unit test
+        run: go test ./... -cover
+
   build-push-docker:
     name: "Build image and push docker hub registry"
     runs-on: ubuntu-latest
+    needs: unit-test
     steps:
       - uses: actions/checkout@v2
       - name: add app.env
