@@ -2,15 +2,15 @@ name: "Build docker image"
 on:
   push:
     branches:
-      - "master"
-      - "development"
+      - 'master'
+      - 'development'
 jobs:
   unit-test:
     name: "unit test"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Go
+      - name: Setup Go
         uses: actions/setup-go@v2
         with:
           go-version: 1.17.4
@@ -18,7 +18,7 @@ jobs:
         run: go test ./... -cover
 
   build-push-docker:
-    name: "Build image and push docker hub registry"
+    name: "Build image and push to dockerhub registry"
     runs-on: ubuntu-latest
     needs: unit-test
     steps:
@@ -29,7 +29,7 @@ jobs:
         run: echo "$APP" > app.env
       - name: build image
         run: docker build -t zipzap11/workuo:latest .
-      - name: login docker hub
+      - name: login dockerhub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME}}
@@ -59,6 +59,6 @@ jobs:
             IdentityFile ~/.ssh/workuo.pem
             StrictHostKeyChecking=no
           END
-        - name: Connect EC2, Remove container, Pull from registry, Start app
-          run: ssh development 'docker rm -f $(docker ps -a -q)' || true && docker pull zipzap11/workuo:latest && docker run -p 8000:8000 --name workuo zipzap11/workuo:latest
+      - name: Connect EC2, Remove container, Pull from registry, Start app
+        run: ssh development 'docker rm -f $(docker ps -a -q)' || true && docker pull zipzap11/workuo:latest && docker run -p 8000:8000 --name workuo zipzap11/workuo:latest
 
