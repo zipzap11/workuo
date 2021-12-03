@@ -54,7 +54,7 @@ jobs:
           chmod 700 ~/.ssh/workuo.pem
           cat >> ~/.ssh/config << END
           Host development 
-            Host_name $SSH_HOST
+            host_name $SSH_HOST
             User $SSH_USER
             IdentityFile ~/.ssh/workuo.pem
             StrictHostKeyChecking=no
