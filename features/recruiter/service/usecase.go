@@ -1,7 +1,9 @@
 package service
 
 import (
+	"errors"
 	"workuo/features/recruiter"
+	"workuo/helper"
 	"workuo/middleware"
 )
 
@@ -14,6 +16,9 @@ func NewRecruiterService(recruiterRepo recruiter.Repository) recruiter.Service {
 }
 
 func (rs *recruiterService) RegisterRecruiter(data recruiter.RecruiterCore) error {
+	if !helper.ValidateEmail(data.Email) || !helper.ValidatePassword(data.Password) {
+		return errors.New("incomplete or invalid data")
+	}
 	err := rs.recruiterRepository.CreateRecruiter(data)
 	if err != nil {
 		return err
@@ -23,12 +28,15 @@ func (rs *recruiterService) RegisterRecruiter(data recruiter.RecruiterCore) erro
 }
 
 func (rs *recruiterService) LoginRecruiter(data recruiter.RecruiterCore) (recruiter.RecruiterCore, error) {
+	if !helper.ValidateEmail(data.Email) || !helper.ValidatePassword(data.Password) {
+		return recruiter.RecruiterCore{}, errors.New("invalid data")
+	}
 	data, err := rs.recruiterRepository.CheckRecruiter(data)
 	if err != nil {
 		return recruiter.RecruiterCore{}, err
 	}
 
-	data.Token, err = middleware.CreateToken(data.ID, data.Company)
+	data.Token, err = middleware.CreateToken(data.ID, "recruiter")
 	if err != nil {
 		return recruiter.RecruiterCore{}, err
 	}

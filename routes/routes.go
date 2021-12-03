@@ -30,6 +30,7 @@ func New() *echo.Echo {
 	jwt.GET("/users/:id", presenter.UserPresentation.GetUserByIdHandler)
 	e.POST("/users/register", presenter.UserPresentation.RegisterUserHandler)
 	e.POST("/users/login", presenter.UserPresentation.LoginUserHandler)
+	jwt.PUT("/users", presenter.UserPresentation.UpdateUserHandler)
 
 	// recruiter
 	e.POST("/recruiters/register", presenter.RecruiterPresentation.RegisterRecruiterHandler)
@@ -39,14 +40,22 @@ func New() *echo.Echo {
 
 	// invitation
 	jwt.POST("/invitations", presenter.InvitationPresentation.InviteUserHandler)
+	jwt.GET("/invitations/:id", presenter.InvitationPresentation.GetInvitationByIDHandler)
+	jwt.GET("/invitations/users", presenter.InvitationPresentation.GetInvitationByUserID)
+	jwt.GET("/invitations/jobs/:id", presenter.InvitationPresentation.GetInvitationByJobID)
+	jwt.PUT("/invitations/accept", presenter.InvitationPresentation.AcceptInvitationHandler)
+	jwt.PUT("/invitations/reject", presenter.InvitationPresentation.RejectInvitationHandler)
 
 	// application
 	jwt.POST("/applications", presenter.ApplicationPresentation.ApplyJobHandler)
 	jwt.GET("/applications/:id", presenter.ApplicationPresentation.GetApplicationByIDHandler)
-	jwt.GET("/applications/users/:id", presenter.ApplicationPresentation.GetApplicationByUserIdHandler)
+	jwt.GET("/applications/users", presenter.ApplicationPresentation.GetApplicationByUserIdHandler)
 	jwt.GET("/applications/jobs/:id", presenter.ApplicationPresentation.GetApplicationByJobIDHandler)
 	jwt.PUT("/applications/reject", presenter.ApplicationPresentation.RejectApplicationHandler)
 	jwt.PUT("/applications/accept", presenter.ApplicationPresentation.AcceptApplication)
+
+	// news
+	jwt.GET("/news", presenter.NewsPresentation.GetNewsHandler)
 
 	return e
 }

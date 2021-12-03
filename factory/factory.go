@@ -1,7 +1,10 @@
 package factory
 
 import (
+	"log"
+	"workuo/config"
 	"workuo/driver"
+
 	//job domain
 	jobData "workuo/features/job/data"
 	jobPresent "workuo/features/job/presentation"
@@ -26,6 +29,11 @@ import (
 	invitationData "workuo/features/invitation/data"
 	invitationPresent "workuo/features/invitation/presentation"
 	invitationService "workuo/features/invitation/service"
+
+	// invitation domain
+	newsData "workuo/features/news/data"
+	newsPresent "workuo/features/news/presentation"
+	newsService "workuo/features/news/service"
 )
 
 type jobPresenter struct {
@@ -34,9 +42,14 @@ type jobPresenter struct {
 	RecruiterPresentation   recruiterPresent.RecruiterHandler
 	ApplicationPresentation applicationPresent.AppHandler
 	InvitationPresentation  invitationPresent.InvitationHandler
+	NewsPresentation        newsPresent.NewsHandler
 }
 
 func Init() jobPresenter {
+	configAPP, err := config.LoadConfig(".")
+	if err != nil {
+		log.Fatal("cannot load config", err)
+	}
 	// job layer
 	jobData := jobData.NewMysqlJobRepository(driver.DB)
 	jobService := jobService.NewJobUseCase(jobData)
@@ -51,11 +64,15 @@ func Init() jobPresenter {
 
 	// application layer
 	appData := applicationData.NewMysqlAppRepository(driver.DB)
-	appService := applicationService.NewAppService(appData)
+	appService := applicationService.NewAppService(appData, jobService, userService)
 
 	// invitation layer
 	invData := invitationData.NewInvitationRepository(driver.DB)
-	invService := invitationService.NewInvitationService(invData, jobService)
+	invService := invitationService.NewInvitationService(invData, jobService, userService, appService)
+
+	// news 3rd party api layer
+	newsData := newsData.NewNewsApiRepository("http://api.mediastack.com/v1/news", configAPP.NewsAPIKey)
+	newsService := newsService.NewApiService(newsData)
 
 	return jobPresenter{
 		JobPresentation:         *jobPresent.NewJobHandler(jobService),
@@ -63,5 +80,6 @@ func Init() jobPresenter {
 		RecruiterPresentation:   *recruiterPresent.NewRecruiterHandler(recruiterService),
 		ApplicationPresentation: *applicationPresent.NewAppHandler(appService),
 		InvitationPresentation:  *invitationPresent.NewInvitationHandler(invService),
+		NewsPresentation:        *newsPresent.NewNewsHandler(newsService),
 	}
 }

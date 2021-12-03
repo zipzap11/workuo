@@ -17,7 +17,12 @@ type JobResponse struct {
 	Title        string
 	Description  string
 	RecruiterId  int
-	Requirements []string
+	Requirements []RequirementResponse
+}
+
+type RequirementResponse struct {
+	ID          int
+	Description string
 }
 
 func NewSuccessResponse(e echo.Context, msg string, data interface{}) error {
@@ -34,9 +39,12 @@ func NewErrorResponse(e echo.Context, msg string, code int) error {
 }
 
 func ToJobResponse(data job.JobCore) JobResponse {
-	convertedRecquirements := []string{}
+	convertedRecquirements := []RequirementResponse{}
 	for _, req := range data.Requirements {
-		convertedRecquirements = append(convertedRecquirements, req.Description)
+		convertedRecquirements = append(convertedRecquirements, RequirementResponse{
+			ID:          int(req.ID),
+			Description: req.Description,
+		})
 	}
 
 	return JobResponse{

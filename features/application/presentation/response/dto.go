@@ -26,6 +26,15 @@ func NewSuccessResponse(e echo.Context, msg string, data interface{}) error {
 	})
 }
 
+type ApplicationResponse struct {
+	ID     uint
+	UserID uint
+	JobID  uint
+	Status string
+	Job    JobDetailResponse
+	User   UserDetailResponse
+}
+
 type ApplicationResponseUser struct {
 	ID     uint
 	UserID uint
@@ -48,6 +57,19 @@ type JobResponse struct {
 	Description string `json: "description`
 }
 
+type JobDetailResponse struct {
+	ID           int
+	Title        string
+	Description  string
+	RecruiterId  int
+	Requirements []RequirementResponse
+}
+
+type RequirementResponse struct {
+	ID          uint
+	Description string
+}
+
 type UserResponse struct {
 	ID      uint
 	Name    string
@@ -56,6 +78,30 @@ type UserResponse struct {
 	Address string
 	Title   string
 	Bio     string
+}
+
+type UserDetailResponse struct {
+	ID          uint
+	Name        string
+	Dob         time.Time
+	Gender      string
+	Address     string
+	Title       string
+	Bio         string
+	Skillsets   []SkillsetResponse
+	Experiences []ExperienceResponse
+}
+
+type SkillsetResponse struct {
+	Name     string
+	Category string
+}
+
+type ExperienceResponse struct {
+	Title       string
+	Description string
+	StartDate   time.Time
+	EndDate     time.Time
 }
 
 func ToApplicationResponseUser(data application.ApplicationCore) ApplicationResponseUser {
@@ -111,6 +157,70 @@ func ToApplicationResponseUserList(data []application.ApplicationCore) []Applica
 	convertedData := []ApplicationResponseUser{}
 	for _, app := range data {
 		convertedData = append(convertedData, ToApplicationResponseUser(app))
+	}
+
+	return convertedData
+}
+
+func ToApplicationResponse(data application.ApplicationCore) ApplicationResponse {
+	return ApplicationResponse{
+		ID:     data.ID,
+		UserID: data.UserID,
+		JobID:  data.JobID,
+		Status: data.Status,
+		Job:    ToJobDetailResponse(data.Job),
+		User:   ToUserDetailResponse(data.User),
+	}
+}
+
+func ToJobDetailResponse(data application.JobCore) JobDetailResponse {
+	return JobDetailResponse{
+		ID:           data.ID,
+		Title:        data.Title,
+		Description:  data.Description,
+		RecruiterId:  data.RecruiterId,
+		Requirements: ToRequirementsResponse(data.Requirements),
+	}
+}
+
+func ToRequirementsResponse(data []application.RequirementCore) []RequirementResponse {
+	converted := []RequirementResponse{}
+	for _, req := range data {
+		temp := RequirementResponse{req.ID, req.Description}
+		converted = append(converted, temp)
+	}
+	return converted
+}
+
+func ToUserDetailResponse(data application.UserCore) UserDetailResponse {
+	return UserDetailResponse{
+		ID:          data.ID,
+		Name:        data.Name,
+		Dob:         data.Dob,
+		Gender:      data.Gender,
+		Address:     data.Address,
+		Title:       data.Title,
+		Bio:         data.Bio,
+		Skillsets:   ToSkillsetResponse(data.Skillsets),
+		Experiences: ToExperienceResponse(data.Experiences),
+	}
+}
+
+func ToSkillsetResponse(data []application.SkillsetCore) []SkillsetResponse {
+	convertedData := []SkillsetResponse{}
+	for _, skill := range data {
+		temp := SkillsetResponse{skill.Name, skill.Category}
+		convertedData = append(convertedData, temp)
+	}
+
+	return convertedData
+}
+
+func ToExperienceResponse(data []application.ExperienceCore) []ExperienceResponse {
+	convertedData := []ExperienceResponse{}
+	for _, skill := range data {
+		temp := ExperienceResponse{skill.Title, skill.Description, skill.StartDate, skill.EndDate}
+		convertedData = append(convertedData, temp)
 	}
 
 	return convertedData

@@ -21,6 +21,11 @@ type User struct {
 	Experiences []Experience
 }
 
+type UserSkillset struct {
+	UserID     uint `gorm: "primaryKey"`
+	SkillsetID uint `gorm: "primaryKey"`
+}
+
 type Skillset struct {
 	ID       uint
 	Category string
@@ -36,34 +41,58 @@ type Experience struct {
 	EndDate     time.Time
 }
 
+func ToUserSkillsetCore(data []UserSkillset) []user.UserSkillsetCore {
+	converted := []user.UserSkillsetCore{}
+	for _, skill := range data {
+		converted = append(converted, user.UserSkillsetCore{
+			UserID:     skill.UserID,
+			SkillsetId: skill.SkillsetID,
+		})
+	}
+	return converted
+}
+
 func toSkillsetRecords(skillsets []user.SkillsetCore) []Skillset {
 	convertedSkillsets := []Skillset{}
 	for _, s := range skillsets {
-		convertedSkillsets = append(convertedSkillsets, Skillset{
-			Name:     s.Name,
-			Category: s.Category,
-		})
+		convertedSkillsets = append(convertedSkillsets, ToSkillsetRecord(s))
 	}
-
 	return convertedSkillsets
+}
+
+func ToSkillsetRecord(data user.SkillsetCore) Skillset {
+	return Skillset{
+		ID:       data.Id,
+		Name:     data.Name,
+		Category: data.Category,
+	}
 }
 
 func toExperienceRecords(experiences []user.ExperienceCore) []Experience {
 	convertedExperiences := []Experience{}
 	for _, ex := range experiences {
-		convertedExperiences = append(convertedExperiences, Experience{
-			Title:       ex.Title,
-			Description: ex.Description,
-			StartDate:   ex.StartDate,
-			EndDate:     ex.EndDate,
-		})
+		convertedExperiences = append(convertedExperiences, ToExperienceRecord(ex))
 	}
 
 	return convertedExperiences
 }
 
+func ToExperienceRecord(data user.ExperienceCore) Experience {
+	return Experience{
+		ID:          data.Id,
+		UserID:      data.UserId,
+		Title:       data.Title,
+		Description: data.Description,
+		StartDate:   data.StartDate,
+		EndDate:     data.EndDate,
+	}
+}
+
 func toUserRecord(user user.UserCore) User {
 	return User{
+		Model: gorm.Model{
+			ID: user.Id,
+		},
 		Name:        user.Name,
 		Dob:         user.Dob,
 		Gender:      user.Gender,
@@ -137,4 +166,19 @@ func toUserCoreList(uList []User) []user.UserCore {
 	}
 
 	return convertedUser
+}
+
+func SeparateUserData(data user.UserCore) (User, []Skillset, []Experience) {
+	user := User{
+		Name:     data.Name,
+		Dob:      data.Dob,
+		Gender:   data.Gender,
+		Address:  data.Address,
+		Title:    data.Title,
+		Bio:      data.Bio,
+		Email:    data.Email,
+		Password: data.Password,
+	}
+
+	return user, user.Skillsets, user.Experiences
 }

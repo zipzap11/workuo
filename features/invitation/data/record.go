@@ -1,6 +1,7 @@
 package data
 
 import (
+	"time"
 	"workuo/features/invitation"
 
 	"gorm.io/gorm"
@@ -12,6 +13,26 @@ type Invitation struct {
 	RecruiterID uint
 	UserID      uint
 	JobID       uint
+	Status      string
+	Job         Job
+	User        User
+}
+
+type Job struct {
+	ID          uint
+	Title       string
+	Description string
+	RecruiterId int
+}
+
+type User struct {
+	ID      uint
+	Name    string
+	Dob     time.Time
+	Gender  string
+	Address string
+	Title   string
+	Bio     string
 }
 
 func ToCore(data Invitation) invitation.InvitationCore {
@@ -20,6 +41,9 @@ func ToCore(data Invitation) invitation.InvitationCore {
 		RecruiterID: data.RecruiterID,
 		UserID:      data.UserID,
 		JobID:       data.JobID,
+		Status:      data.Status,
+		Job:         ToJobCore(data.Job),
+		User:        ToUserCore(data.User),
 	}
 }
 
@@ -29,6 +53,7 @@ func FromCore(data invitation.InvitationCore) Invitation {
 		RecruiterID: data.RecruiterID,
 		UserID:      data.UserID,
 		JobID:       data.JobID,
+		Status:      data.Status,
 	}
 }
 
@@ -38,4 +63,25 @@ func ToCoreList(data []Invitation) []invitation.InvitationCore {
 		convertedData = append(convertedData, ToCore(data))
 	}
 	return convertedData
+}
+
+func ToJobCore(data Job) invitation.JobCore {
+	return invitation.JobCore{
+		ID:          int(data.ID),
+		RecruiterId: data.RecruiterId,
+		Title:       data.Title,
+		Description: data.Description,
+	}
+}
+
+func ToUserCore(data User) invitation.UserCore {
+	return invitation.UserCore{
+		ID:      data.ID,
+		Name:    data.Name,
+		Title:   data.Title,
+		Dob:     data.Dob,
+		Gender:  data.Gender,
+		Address: data.Address,
+		Bio:     data.Bio,
+	}
 }

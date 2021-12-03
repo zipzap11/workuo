@@ -21,8 +21,6 @@ type JobCore struct {
 	RecruiterId  int
 	Company      string
 	Requirements []RequirementCore
-	Created_at   time.Time
-	Updated_at   time.Time
 }
 
 type RequirementCore struct {
@@ -32,13 +30,30 @@ type RequirementCore struct {
 }
 
 type UserCore struct {
-	ID      uint
-	Name    string
-	Dob     time.Time
-	Gender  string
-	Address string
-	Title   string
-	Bio     string
+	ID          uint
+	Name        string
+	Dob         time.Time
+	Gender      string
+	Address     string
+	Title       string
+	Bio         string
+	Skillsets   []SkillsetCore
+	Experiences []ExperienceCore
+}
+
+type SkillsetCore struct {
+	Id       uint
+	Name     string
+	Category string
+}
+
+type ExperienceCore struct {
+	Id          uint
+	UserId      uint
+	Description string
+	Title       string
+	StartDate   time.Time
+	EndDate     time.Time
 }
 
 type Repository interface {
@@ -46,6 +61,7 @@ type Repository interface {
 	GetApplicationByUserID(int) ([]ApplicationCore, error)
 	GetApplicationByID(int) (ApplicationCore, error)
 	GetApplicationByJobID(int) ([]ApplicationCore, error)
+	GetApplicationMultiParam(int, int) (ApplicationCore, error)
 	RejectApplication(int) error
 	AcceptApplication(int) error
 }
@@ -55,6 +71,7 @@ type Service interface {
 	GetApplicationByUserID(int) ([]ApplicationCore, error)
 	GetApplicationByID(int) (ApplicationCore, error)
 	GetApplicationByJobID(int) ([]ApplicationCore, error)
-	RejectApplication(int) error
-	AcceptApplication(int) error
+	GetApplicationMultiParam(int, int) (ApplicationCore, error)
+	RejectApplication(int, int) error
+	AcceptApplication(int, int) error
 }

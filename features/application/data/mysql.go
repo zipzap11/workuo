@@ -56,7 +56,7 @@ func (ar *mysqlAppRepository) AcceptApplication(id int) error {
 
 func (ar *mysqlAppRepository) GetApplicationByID(id int) (application.ApplicationCore, error) {
 	var data Application
-	err := ar.DB.Joins("Job").First(&data, id).Error
+	err := ar.DB.Debug().First(&data, id).Error
 	if err != nil {
 		return application.ApplicationCore{}, err
 	}
@@ -75,4 +75,14 @@ func (ar *mysqlAppRepository) GetApplicationByJobID(id int) ([]application.Appli
 	}
 
 	return ToCoreList(applications), nil
+}
+
+func (ar *mysqlAppRepository) GetApplicationMultiParam(jobId int, userId int) (application.ApplicationCore, error) {
+	var data Application
+	err := ar.DB.Where("job_id = ? AND user_id = ?", jobId, userId).Find(&data).Error
+	if err != nil {
+		return application.ApplicationCore{}, err
+	}
+
+	return ToCore(data), nil
 }

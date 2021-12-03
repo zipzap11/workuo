@@ -1,11 +1,13 @@
 package presentation
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 	"workuo/features/application"
-	"workuo/features/application/presentation/request"
 	"workuo/features/application/presentation/response"
+	"workuo/helper"
+	"workuo/middleware"
 
 	"github.com/labstack/echo/v4"
 )
@@ -19,86 +21,111 @@ func NewAppHandler(as application.Service) *AppHandler {
 }
 
 func (ah *AppHandler) ApplyJobHandler(e echo.Context) error {
-	var reqPayload request.ApplicationRequest
-	err := e.Bind(&reqPayload)
+	jobId, err := strconv.Atoi(e.QueryParam("jobId"))
 	if err != nil {
-		return response.NewSuccessResponse(e, err.Error(), http.StatusBadRequest)
+		return helper.ErrorResponse(e, http.StatusBadRequest, "Invalid id paramter", err)
 	}
 
-	err = ah.appService.ApplyJob(reqPayload.ToCore())
-	if err != nil {
-		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
+	claims := middleware.ExtractClaim(e)
+	role := claims["role"]
+	userId := uint(claims["id"].(float64))
+	if role != "user" {
+		return helper.ErrorResponse(e, http.StatusForbidden, "only user role can apply job", err)
 	}
 
-	return response.NewSuccessResponse(e, "success", nil)
+	err = ah.appService.ApplyJob(application.ApplicationCore{
+		JobID:  uint(jobId),
+		UserID: userId,
+	})
+	if err != nil {
+		return helper.ErrorResponse(e, http.StatusInternalServerError, "Something went wrong", err)
+	}
+
+	return helper.SuccessResponse(e, nil)
 }
 
 func (ah *AppHandler) GetApplicationByUserIdHandler(e echo.Context) error {
-	id, err := strconv.Atoi(e.Param("id"))
-	if err != nil {
-		return response.NewSuccessResponse(e, err.Error(), http.StatusBadRequest)
+	claims := middleware.ExtractClaim(e)
+	userId := int(claims["id"].(float64))
+	role := claims["role"].(string)
+	if role != "user" {
+		return helper.ErrorResponse(e, http.StatusForbidden, "role not allowed to get data", errors.New("forbidden"))
 	}
 
-	applications, err := ah.appService.GetApplicationByUserID(id)
+	applications, err := ah.appService.GetApplicationByUserID(userId)
 	if err != nil {
-		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
+		return helper.ErrorResponse(e, http.StatusInternalServerError, "Something went wrong", err)
 	}
 
-	return response.NewSuccessResponse(e, "success", response.ToApplicationResponseUserList(applications))
+	return helper.SuccessResponse(e, response.ToApplicationResponseUserList(applications))
 }
 
 func (ah *AppHandler) RejectApplicationHandler(e echo.Context) error {
 	id, err := strconv.Atoi(e.QueryParam("id"))
 	if err != nil {
-		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
+		return helper.ErrorResponse(e, http.StatusBadRequest, "invalid id parameter", err)
 	}
 
-	err = ah.appService.RejectApplication(id)
+	claims := middleware.ExtractClaim(e)
+	role := claims["role"]
+	recruiterId := uint(claims["id"].(float64))
+	if role != "recruiter" {
+		return helper.ErrorResponse(e, http.StatusForbidden, "user not allowed to reject application", errors.New("action not allowed"))
+	}
+
+	err = ah.appService.RejectApplication(id, int(recruiterId))
 	if err != nil {
-		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
+		return helper.ErrorResponse(e, http.StatusInternalServerError, "something went wrong", err)
 	}
 
-	return response.NewSuccessResponse(e, "success", nil)
+	return helper.SuccessResponse(e, nil)
 }
 
 func (ah *AppHandler) AcceptApplication(e echo.Context) error {
 	id, err := strconv.Atoi(e.QueryParam("id"))
 	if err != nil {
-		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
+		return helper.ErrorResponse(e, http.StatusBadRequest, "invalid id parameter", err)
 	}
 
-	err = ah.appService.AcceptApplication(id)
+	claims := middleware.ExtractClaim(e)
+	role := claims["role"]
+	recruiterId := uint(claims["id"].(float64))
+	if role != "recruiter" {
+		return helper.ErrorResponse(e, http.StatusForbidden, "user not allowed to accept application", errors.New("action not allowed"))
+	}
+
+	err = ah.appService.AcceptApplication(id, int(recruiterId))
 	if err != nil {
-		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
+		return helper.ErrorResponse(e, http.StatusInternalServerError, "something went wrong", err)
 	}
 
-	return response.NewSuccessResponse(e, "success", nil)
+	return helper.SuccessResponse(e, nil)
 }
 
 func (ah *AppHandler) GetApplicationByIDHandler(e echo.Context) error {
 	id, err := strconv.Atoi(e.Param("id"))
 	if err != nil {
-		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
+		return helper.ErrorResponse(e, http.StatusBadRequest, "invalid id parameter", err)
 	}
 
 	appCore, err := ah.appService.GetApplicationByID(id)
 	if err != nil {
-		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
+		return helper.ErrorResponse(e, http.StatusInternalServerError, "something went wrong", err)
 	}
 
-	return response.NewSuccessResponse(e, "success", response.ToApplicationResponseJob(appCore))
+	return helper.SuccessResponse(e, response.ToApplicationResponse(appCore))
 }
 
 func (ah *AppHandler) GetApplicationByJobIDHandler(e echo.Context) error {
 	id, err := strconv.Atoi(e.Param("id"))
 	if err != nil {
-		return response.NewErrorResponse(e, err.Error(), http.StatusBadRequest)
+		return helper.ErrorResponse(e, http.StatusBadRequest, "invalid id paramter", err)
 	}
 
 	apps, err := ah.appService.GetApplicationByJobID(id)
 	if err != nil {
-		return response.NewErrorResponse(e, err.Error(), http.StatusInternalServerError)
+		return helper.ErrorResponse(e, http.StatusInternalServerError, "something went wrong", err)
 	}
 
-	return response.NewSuccessResponse(e, "success", response.ToApplicationResponseJobList(apps))
+	return helper.SuccessResponse(e, response.ToApplicationResponseJobList(apps))
 }

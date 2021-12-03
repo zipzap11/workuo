@@ -10,7 +10,7 @@ type mysqlJobRepository struct {
 	DB *gorm.DB
 }
 
-func NewMysqlJobRepository(DB *gorm.DB) job.Data {
+func NewMysqlJobRepository(DB *gorm.DB) job.Repository {
 	return &mysqlJobRepository{DB}
 }
 
