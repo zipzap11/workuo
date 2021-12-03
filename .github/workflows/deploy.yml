@@ -1,39 +1,21 @@
-name: Deploy To Production
-
+name: "Build docker image"
 on:
   push:
     branches:
-      - 'master'
-
+      - "master"
+      - "development"
 jobs:
-  build:
-    name: Build Image
+  build-push-docker:
+    name: "Build image and push docker hub registry"
     runs-on: ubuntu-latest
-
     steps:
-    -name: checkout
-    - uses: actions/checkout@v2
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-2
-
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-
-    steps:
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-
-    - name: Build, tag, and push image to Amazon ECR
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: workuo
-        IMAGE_TAG: ${{ github.sha }}
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      - uses: actions/checkout@v2
+      - name: build image
+        run: docker build -t zipzap11/workuo:latest .
+      - name: login docker hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME}}
+          password: ${{ secrets.DOKERHUB_PASSWORD }}
+      - name: push image to dockerhub
+        run: docker push zipzap11/workuo:latest

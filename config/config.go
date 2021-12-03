@@ -11,6 +11,7 @@ type Config struct {
 	JWTsecret  string `mapstructure:"JWT_SECRET"`
 	ServerPort string `mapstructure:"SERVER_PORT"`
 	ServerHost string `mapstructure:"SERVER_HOST"`
+	NewsAPIKey string `mapstructure:"NEWS_API_KEY"`
 }
 
 func LoadConfig(path string) (config Config, err error) {

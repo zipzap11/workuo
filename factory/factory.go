@@ -1,7 +1,10 @@
 package factory
 
 import (
+	"log"
+	"workuo/config"
 	"workuo/driver"
+
 	//job domain
 	jobData "workuo/features/job/data"
 	jobPresent "workuo/features/job/presentation"
@@ -43,6 +46,10 @@ type jobPresenter struct {
 }
 
 func Init() jobPresenter {
+	configAPP, err := config.LoadConfig(".")
+	if err != nil {
+		log.Fatal("cannot load config", err)
+	}
 	// job layer
 	jobData := jobData.NewMysqlJobRepository(driver.DB)
 	jobService := jobService.NewJobUseCase(jobData)
@@ -64,7 +71,7 @@ func Init() jobPresenter {
 	invService := invitationService.NewInvitationService(invData, jobService, userService, appService)
 
 	// news 3rd party api layer
-	newsData := newsData.NewNewsApiRepository("http://api.mediastack.com/v1/news", "766a95e2129726c4306bdf9a3745c8b6")
+	newsData := newsData.NewNewsApiRepository("http://api.mediastack.com/v1/news", configAPP.NewsAPIKey)
 	newsService := newsService.NewApiService(newsData)
 
 	return jobPresenter{
