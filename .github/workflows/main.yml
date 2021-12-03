@@ -60,5 +60,5 @@ jobs:
             StrictHostKeyChecking=no
           END
       - name: Connect EC2, Remove container, Pull from registry, Start app
-        run: ssh development 'docker rm -f $(docker ps -a -q) || true && docker pull zipzap11/workuo:latest && docker run -p 8000:8000 --name workuo zipzap11/workuo:latest'
+        run: ssh development 'docker rm -f $(docker ps -a -q) || true && docker pull zipzap11/workuo:latest && docker run -d -p 8000:8000 --name workuo zipzap11/workuo:latest'
 
